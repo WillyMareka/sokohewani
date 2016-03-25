@@ -18,7 +18,7 @@ class Export extends MY_Controller
      if(count($excel_data)>0):
         
         $objPHPExcel = new PHPExcel();
-        $objPHPExcel -> getProperties() -> setCreator("Asset Management");
+        $objPHPExcel -> getProperties() -> setCreator("SokoHewani Limited");
         $objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
         $objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
         $objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
@@ -86,11 +86,11 @@ if(count($pdf_data)>0):
     
 $image=base_url().'assets/images/pdfimage.jpg';
 $html_title="<div align=center><img src='$image' height='70' width='70'style='vertical-align: top;'> </img></div>
-<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>".$pdf_data['pdf_title']."</div>
+                <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>".$pdf_data['pdf_title']."</div>
 
-<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>Asset Management</div>
+                  <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>Asset Management</div>
 
-<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>".$pdf_data['pdf_topic']." Report</div><hr/>";
+                    <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>".$pdf_data['pdf_topic']." Report</div><hr/>";
 
 $table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
                      table.data-table th {border: none;color: #036;text-align: center;border: 1px solid #DDD;border-top: none;max-width: 450px;}

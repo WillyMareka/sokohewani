@@ -14,12 +14,12 @@
                          <button data-toggle="dropdown" class="btn dropdown-toggle right ">Download Active Users <span class="caret"></span></button>
                          <ul class="dropdown-menu">
                            
-                           <li><a href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
-                           <li><a href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
+                           <li><a href="<?php echo base_url(). 'admin/createusersview/inactive/pdf'?>">Export to PDF</a></li>
+                           <li><a href="<?php echo base_url(). 'admin/createusersview/inactive/excel'?>">Export to Excel</a></li>
                          </ul>
                        </div>
                      </div>
-                     <table class="table table-striped" id="homeuserprofiles"><!-- The table created in the page -->
+                     <table class="table table-striped" id="homeinuserprofiles"><!-- The table created in the page -->
                        <thead>
                         <tr>
 
@@ -35,7 +35,7 @@
                         </tr>
                        </thead>
                         <?php
-                          echo $all_users; 
+                          echo $all_dusers; 
                         ?>
                    </table>
 

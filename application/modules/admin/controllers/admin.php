@@ -39,6 +39,20 @@ class Admin extends MY_Controller {
 
     }
 
+    function inactiveusers($data=NULL)
+    {
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_dusers';
+        $data['footer']='admin/admin_footer';
+
+        $data['all_dusers'] = $this->createusersview('table','inactive');
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
     function development($data=NULL)
     {
   
@@ -100,14 +114,16 @@ class Admin extends MY_Controller {
         <ol type="a">';
 
         foreach ($users as $key => $data) {
+            //echo "<pre>";print_r($users);echo "</pre>";die();
             $count++;
                 if ($data['userstatus'] == 1) {
-                    $state = '<span class="label label-info">Activated</span>';
+                    $state = '<span class="btn disabled">Activated</span>';
                     $states = 'Activated';
                 } else if ($data['userstatus'] == 0) {
-                    $state = '<span class="label label-danger">Deactivated</span>';
+                    $state = '<span class="btn disabled">Deactivated</span>';
                     $states = 'Deactivated';
                 }
+                $date = date("d-m-Y",strtotime($data['regdate']));
 
         switch ($type) {
             case 'table':
@@ -118,7 +134,7 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$data['lastname'].'</td>';
                 $display .= '<td class="centered">'.$data['emailaddress'].'</td>';
                 $display .= '<td class="centered">'.$state.'</td>';
-                $date = date("d-m-Y",strtotime($data['regdate']));
+                
                 $display .= '<td class="centered">'.$date.'</td>';
                 
 
@@ -231,7 +247,7 @@ class Admin extends MY_Controller {
             switch ($type) {
 
                 case 'userdelete':
-                    $this->index();
+                    $this->inactiveusers();
                     //$this->users();
                     break;
 
