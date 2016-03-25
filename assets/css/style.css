@@ -7,3 +7,12 @@
   main {
     flex: 1 0 auto;
   }
+
+  nav{
+  	background-color:#17324e;
+  }
+
+  footer.page-footer{
+  	background-color:#17324e;
+  }
+

@@ -10,6 +10,7 @@ class Admin extends MY_Controller {
 
   public function __construct()
     {
+        parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
         $this->load->library('upload');
@@ -18,7 +19,7 @@ class Admin extends MY_Controller {
         $this->load->module('export');
 
         $this->load->model('admin_model');
-        parent::__construct();
+        
      
     }
 
@@ -65,10 +66,11 @@ class Admin extends MY_Controller {
 
     }
 
+    
+
     function createusersview($type,$status)
     {
-           $display = '';
-
+      
         switch ($status) {
             case 'active':
                $users = $this->admin_model->get_all_users();
@@ -82,21 +84,13 @@ class Admin extends MY_Controller {
                 # code...
                 break;
         }
-        
-           
-             // echo "<pre>";print_r("reached");echo "</pre>";die();
-        
 
-        $count = 0;
+         //echo "<pre>";print_r($users);echo '</pre>';die();
 
-
-      // creating arrays for both pdf and excel for data storage and transfer
         $column_data = $row_data = array();
-
-        // display used for table
-        $display .= "<tbody>";
-
-        // html_body Used for the pdf
+          
+        $count = 0;
+        $display = "<tbody>";
         $html_body = '
         <table class="data-table">
         <thead>
@@ -112,8 +106,10 @@ class Admin extends MY_Controller {
         </thead>
         <tbody>
         <ol type="a">';
+        
+        if(isset($users)){
 
-        foreach ($users as $key => $data) {
+            foreach ($users as $key => $data) {
             //echo "<pre>";print_r($users);echo "</pre>";die();
             $count++;
                 if ($data['userstatus'] == 1) {
@@ -123,9 +119,12 @@ class Admin extends MY_Controller {
                     $state = '<span class="btn disabled">Deactivated</span>';
                     $states = 'Deactivated';
                 }
+
                 $date = date("d-m-Y",strtotime($data['regdate']));
 
-        switch ($type) {
+            
+
+    switch ($type) {
             case 'table':
                 $display .= '<tr>';
                 $display .= '<td class="centered">'.$count.'</td>';
@@ -137,8 +136,6 @@ class Admin extends MY_Controller {
                 
                 $display .= '<td class="centered">'.$date.'</td>';
                 
-
-                //$display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/viewuser/'.$data['user ID'].'"><i class="fa fa-eye black"></i></a></td>';
                 $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/userdetail/'.$data['userid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['userstatus'] == 0){
@@ -156,57 +153,64 @@ class Admin extends MY_Controller {
             case 'excel':
                
                  array_push($row_data, array($count, $data['userid'], $data['firstname'], $data['lastname'], $data['emailaddress'], $states, $date)); 
+                 foreach ($data as $name => $value) {
+                $col = $name;
+                array_push($column_data, $col);
+            }
 
                 break;
 
             case 'pdf':
+            
+            
+            //echo'<pre>';print_r($html_body);echo'</pre>';die();
 
-            //echo'<pre>';print_r($categories);echo'</pre>';die();
-           
                 $html_body .= '<tr>';
                 $html_body .= '<td>'.$count.'</td>';
                 $html_body .= '<td>'.$data['userid'].'</td>';
                 $html_body .= '<td>'.$data['firstname'].'</td>';
                 $html_body .= '<td>'.$data['lastname'].'</td>';
                 $html_body .= '<td>'.$data['emailaddress'].'</td>';
-                $html_body .= '<td>'.$states.'</td>';
+                $html_body .= '<td>'.$state.'</td>';
                 $html_body .= '<td>'.$date.'</td>';
                 $html_body .= "</tr></ol>";
 
                 break;
                }
             }
+        }
         
-        
-        if($type == 'excel'){
 
+        if($type == 'excel'){
             $excel_data = array();
-            $excel_data = array('doc_creator' => 'SokoHewa Limited', 'doc_title' => 'User Excel Report', 'file_name' => 'User Report', 'excel_topic' => 'User Profiles');
-            $column_data = array('Number','User ID','First Name','Last Name','Email Address','Profile Status','Date Registered');
+            $excel_data = array('doc_creator' => 'SokoHewa Limited', 'doc_title' => 'User Excel Report', 'file_name' => 'Profile Report', 'excel_topic' => 'Profiles Report');
+            // $column_data = array('No.','User ID','First Name','Last Name','Email Address','Profile Status','Date Registered');
             $excel_data['column_data'] = $column_data;
             $excel_data['row_data'] = $row_data;
 
-              //echo'<pre>';print_r($excel_data);echo'</pre>';die();
-
+        echo'<pre>';print_r($excel_data);echo'</pre>';
+            // echo'<pre>';var_dump($excel_data);echo'</pre>';
             $this->export->create_excel($excel_data);
 
         }elseif($type == 'pdf'){
             
+            
             $html_body .= '</tbody></table>';
-            $pdf_data = array("pdf_title" => "User PDF Report", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => 'User Report', 'pdf_topic' => 'User Profile');
+            $pdf_data = array("pdf_title" => "Profile PDF Report", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => 'Profile Report', 'pdf_topic' => 'Profiles');
 
-            //echo'<pre>';print_r($pdf_data);echo'</pre>';die();
+        //echo'<pre>';print_r($pdf_data);echo'</pre>';
+
 
             $this->export->create_pdf($pdf_data);
-
         }else{
+              $display .= "</tbody>";
 
-            $display .= "</tbody>";
-
-            //echo'<pre>';print_r($display);echo'</pre>';die();
+              //echo'<pre>';print_r($display);echo'</pre>';die();
 
             return $display;
         }
+
+        
     }
 
 

@@ -9,21 +9,19 @@
     <meta name="description" content="Soko for all">
     <meta name="author" content="sokohewani">
 
-    <title>Soko Admin</title>
+    <title>SokoHewani Admin</title>
     
 
     <!-- CSS plugins -->
 
-    <link rel="stylesheet" href="<?php echo base_url().'assets/css/style.css'?>" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
     <link rel="stylesheet" href="<?php echo base_url().'assets/plugins/jquery-ui-1.11.4/jquery-ui.min.css'?>">
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <link rel="stylesheet" href="<?php echo base_url().'assets/css/jquery.dataTables.min.css'?>">
 
 
-    
+    <link rel="stylesheet" href="<?php echo base_url().'assets/css/style.css'?>" />
     <!-- <link rel="icon" type="image/x-icon" href="<?php echo base_url.'assets/fonts/soko.ico'?>" /> -->
     <!-- /CSS plugins -->
 
