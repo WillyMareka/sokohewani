@@ -14,8 +14,8 @@
                          
                          <ul class="dropdown-menu">
 
-                           <li class="download"><a class="left blue waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
-                           <li class="download"><a class="blue waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
+                           <li class="download"><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
+                           <li class="download"><a class="green waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
                          </ul>
                        </div>
                      </div>
@@ -32,6 +32,7 @@
                           <th>Date Registered</th>
                           <th>View</th>
                           <th>Status</th>
+                          <th>Delete</th>
                         </tr>
                        </thead>
                         <?php

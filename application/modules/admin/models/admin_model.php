@@ -38,6 +38,16 @@ class Admin_model extends MY_Model {
         return $result->result_array();
     }
 
+
+    function delete_user($id) {
+         $result = $this->db->query("DELETE FROM `users` WHERE userid = '".$id."'"); 
+         if ($result) {
+            return "deleted";
+        } else {
+            return "notdeleted";
+        }
+    }
+
    
 
     public function userprofile($id) {
@@ -63,7 +73,7 @@ class Admin_model extends MY_Model {
         $data = array();
 
         switch ($type) {
-            case 'userdelete':
+            case 'userinactive':
                 $data['userstatus'] = 0;
 
                 break;

@@ -13,8 +13,9 @@
                        <!-- <a class="left adminadd" href="<?php echo base_url(). 'index.php/admin/adduser'?>">Add <?php echo $admin_subtitle?></a> -->
                          <ul class="dropdown-menu">
                            
-                           <li><a class="left blue waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
-                           <li><a class="blue waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
+                           <li><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
+                           <li><a class="green waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
+                           <li><a class="blue right waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin'?>">Back to Actives</a></li>
                          </ul>
                        </div>
                      </div>
@@ -31,6 +32,7 @@
                           <th>Date Registered</th>
                           <th>View</th>
                           <th>Status</th>
+                          <th>Delete</th>
                         </tr>
                        </thead>
                         <?php

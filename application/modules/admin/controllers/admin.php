@@ -39,6 +39,20 @@ class Admin extends MY_Controller {
 
     }
 
+    function activeusers($data=NULL)
+    {
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_content';
+        $data['footer']='admin/admin_footer';
+
+        $data['all_users'] = $this->createusersview('table','active');
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
     function inactiveusers($data=NULL)
     {
   
@@ -140,9 +154,10 @@ class Admin extends MY_Controller {
                         if($data['userstatus'] == 0){
                 $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/userupdate/userrestore/'.$data['userid'].'"><i class="material-icons">add</i></td>';
                }else if($data['userstatus'] == 1){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Deactivate" href = "'.base_url().'admin/userupdate/userdelete/'.$data['userid'].'"><i class="material-icons">delete</i></td>';
+                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Deactivate" href = "'.base_url().'admin/userupdate/userinactive/'.$data['userid'].'"><i class="material-icons">delete</i></td>';
                 }
                 
+                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Delete" href = "'.base_url().'admin/userdelete/'.$data['userid'].'"><i class="material-icons">delete</i></a></td>';
                 
               
                 $display .= '</tr>';
@@ -240,6 +255,35 @@ class Admin extends MY_Controller {
  
     }
 
+    function userdelete($id)
+    {
+        //$this->log_check();
+
+        $results = $this->admin_model->delete_user($id);
+
+        
+        
+            switch ($results) {
+
+                case 'deleted':
+                    $this->index();
+                    //$this->users();
+                    break;
+
+                case 'notdeleted':
+                    $this->index();
+                    //$this->users();
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+ 
+    }
+
+    
+
 
     function userupdate($type, $user_id)
     {
@@ -249,7 +293,7 @@ class Admin extends MY_Controller {
         {
             switch ($type) {
 
-                case 'userdelete':
+                case 'userinactive':
                     $this->inactiveusers();
                     //$this->users();
                     break;

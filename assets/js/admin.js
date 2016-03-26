@@ -8,8 +8,20 @@ $(".dropdown-button").dropdown();
 
 
 //dataTables      
-$('#homeuserprofiles').DataTable();  
-$('#homeinuserprofiles').DataTable();  
+$('#homeuserprofiles').DataTable({
+    language: {
+        searchPlaceholder: "Search active profile"
+    }
+    
+});  
+
+
+
+$('#homeinuserprofiles').DataTable({
+    language: {
+        searchPlaceholder: "Search inactive profile"
+    }
+});  
 
 //dataTables//
 

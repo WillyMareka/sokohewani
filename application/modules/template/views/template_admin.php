@@ -26,7 +26,7 @@
     <!-- /CSS plugins -->
 
 
-
+   
    <!-- JS plugins -->
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/js/jquery-1.12.2.min.js'?>"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/plugins/jquery-ui-1.11.4/jquery-ui.min.js'?>"></script>
