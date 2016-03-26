@@ -105,7 +105,7 @@ $table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
             $this->mpdf->WriteHTML($table_style.$pdf_data['pdf_html_body']);
-            $this->mpdf->SetFooter("{DATE D j M Y }|{PAGENO}/{nb}|Prepared by: Asset Management, Continuum Developers");
+            $this->mpdf->SetFooter("{DATE D j M Y }|{PAGENO}/{nb}|Prepared by: SokoHewani, Limited");
 
             
     if($pdf_data['pdf_view_option']=='save_file'):
