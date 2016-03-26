@@ -97,6 +97,45 @@ class Admin_model extends MY_Model {
 
 
 
+     public function get_approving_status($prodapprovestate)
+  {
+    $products = array();
+    $this->db->order_by("prodid", "desc"); 
+
+          switch ($prodapprovestate) {
+              case 'await':
+              $query = $this->db->get_where('products', array('prodavail' => 0,'prodapproval' => 2)); 
+              break;
+              case 'approved':
+               $query = $this->db->get_where('products', array('prodavail' => 1, 'prodapproval' => 1));
+              break;
+              case 'disapproved':
+               $query = $this->db->get_where('products', array('prodavail' => 0, 'prodapproval' => 3));
+              break;
+    
+              default:
+               break;
+          }
+    
+
+
+    $result = $query->result_array();
+
+    if ($result) {
+      foreach ($result as $key => $value) {
+        $products[$value['prod_id']] = $value;
+      }
+      //echo '<pre>';print_r($value);echo '</pre>';die();
+      
+      return $products;
+    }
+    
+    return $products;
+  }
+
+
+
+
 
 
 

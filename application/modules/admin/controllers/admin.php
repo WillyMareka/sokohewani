@@ -27,13 +27,15 @@ class Admin extends MY_Controller {
 
     function index($data=NULL)
     {
+
+        $data['all_users'] = $this->createusersview('table','active');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
         $data['content']='admin/admin_content';
         $data['footer']='admin/admin_footer';
 
-        $data['all_users'] = $this->createusersview('table','active');
+        
         //echo "<pre>";print_r($data);die();
         $this->template->call_admin_template($data);
 
@@ -41,31 +43,57 @@ class Admin extends MY_Controller {
 
     function activeusers($data=NULL)
     {
+
+        $data['all_users'] = $this->createusersview('table','active');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
         $data['content']='admin/admin_content';
         $data['footer']='admin/admin_footer';
 
-        $data['all_users'] = $this->createusersview('table','active');
+        
+        
         //echo "<pre>";print_r($data);die();
         $this->template->call_admin_template($data);
 
     }
 
+    
     function inactiveusers($data=NULL)
     {
+
+        $data['all_dusers'] = $this->createusersview('table','inactive');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
         $data['content']='admin/admin_dusers';
         $data['footer']='admin/admin_footer';
 
-        $data['all_dusers'] = $this->createusersview('table','inactive');
+        
         //echo "<pre>";print_r($data);die();
         $this->template->call_admin_template($data);
 
     }
+
+
+
+    function productsview($data=NULL)
+    {
+
+        $data['waits'] = $this->productapproving('await');
+        $data['approves'] = $this->productapproving('approved');
+        $data['disapproves'] = $this->productapproving('disapproved');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_product_view';
+        $data['footer']='admin/admin_footer';
+
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
 
     function development($data=NULL)
     {
@@ -311,23 +339,35 @@ class Admin extends MY_Controller {
     }
 
 
-    // function users()
-    // {
-    //    $this->log_check();
+    function productapproving($prodapprovestate)
+  {
+    $proddet = array();
+    switch ($prodapprovestate) {
 
-    //     $data['all_clients'] = $this->createusersview('table','active');
-        
+        case 'await':
+            $results = $this->admin_model->get_approving_status($prodapprovestate);
+            break;
 
-    //     $data['navbar']='admin/admin_header';
-    //     $data['sidebar']='admin/admin_sidebar';
-    //     $data['content']='admin/userprofile';
-    //     $data['footer']='admin/admin_footer';
-        
-        
-    //     $this->template->call_admin_template($data);
-    // }
+        case 'approved':
+            $results = $this->admin_model->get_approving_status($prodapprovestate);
+            break;
+
+        case 'disapproved':
+            $results = $this->admin_model->get_approving_status($prodapprovestate);
+            break;
+    }
+       
+       foreach ($results as $key => $values) {  
+           $proddet['proddet'][] = $values;
+       }
+
+       // echo '<pre>';print_r($proddet);echo '</pre>';die;
+
+        return $proddet;
+  }
 
 
+  
 
 
 

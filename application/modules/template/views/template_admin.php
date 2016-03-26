@@ -39,30 +39,27 @@
 </head>
 
 <body>
-<div class="main">
-   <header>
-        <?php
-           $this->load->view($navbar);
-        ?>
-   </header>
-        <?php
-           $this->load->view($sidebar);
-        ?>
+        <header>
+             <?php
+                $this->load->view($navbar);
+             ?>
+             <?php
+                $this->load->view($sidebar);
+             ?>
+        </header>
+        
         <main>
-       <div class="container">
-        <?php
-           $this->load->view($content);
-        ?>
-       </div>
+            <div class="container">
+             <?php
+                $this->load->view($content);
+             ?>
+            </div>
        </main>
        <footer class="page-footer">
         <?php
            $this->load->view($footer);
         ?>
        </footer>
-
-   
-    </div>
 </body>
 
 </html>
