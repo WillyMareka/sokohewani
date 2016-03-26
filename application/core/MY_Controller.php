@@ -17,7 +17,7 @@ class MY_Controller extends MX_Controller
         $this->load->module('template');
         $this->load->module('export');
 
-        
+        // $this->load->library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
     }
 
   

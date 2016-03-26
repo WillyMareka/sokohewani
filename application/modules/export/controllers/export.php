@@ -2,16 +2,16 @@
 
 class Export extends MY_Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
-		$this->load->library('mpdf/mpdf');
+  public function __construct()
+  {
+    parent::__construct();
+    $this->load->library('mpdf/mpdf');
     $this->load->library('PHPExcel');
     $this->load->helper(array('url','file','download'));
         
-	}
+  }
 
-	 public function create_excel($excel_data=NUll) {
+   public function create_excel($excel_data=NUll) {
         
  //check if the excel data has been set if not exit the excel generation    
      
@@ -86,12 +86,11 @@ if(count($pdf_data)>0):
     
 $image=base_url().'assets/images/mareka.jpg';
 $html_title="<div align=center><img src='$image' height='70' width='70'style='vertical-align: top;'> </img></div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>".$pdf_data['pdf_title']."</div>
 
-               <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>".$pdf_data['pdf_title']."</div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>Asset Management</div>
 
-                  <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>Asset Management</div>
-
-                    <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>".$pdf_data['pdf_topic']." Report</div><hr/>";
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>".$pdf_data['pdf_topic']." Report</div><hr/>";
 
 $table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
                      table.data-table th {border: none;color: #036;text-align: center;border: 1px solid #DDD;border-top: none;max-width: 450px;}

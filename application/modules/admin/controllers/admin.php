@@ -11,14 +11,13 @@ class Admin extends MY_Controller {
   public function __construct()
     {
         parent::__construct();
-        $this->load->helper(array('form', 'url'));
-        $this->load->library('form_validation');
+        $this->load->model('admin_model');
+        $this->load->module('export/export');
         $this->load->library('upload');
 
         $this->pic_path = realpath(APPPATH . '../uploads/');
-        $this->load->module('export');
 
-        $this->load->model('admin_model');
+        
         
      
     }
@@ -188,7 +187,7 @@ class Admin extends MY_Controller {
             $excel_data['column_data'] = $column_data;
             $excel_data['row_data'] = $row_data;
 
-        echo'<pre>';print_r($excel_data);echo'</pre>';
+        //echo'<pre>';print_r($excel_data);echo'</pre>';
             // echo'<pre>';var_dump($excel_data);echo'</pre>';
             $this->export->create_excel($excel_data);
 
