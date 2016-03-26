@@ -38,12 +38,12 @@
              </div>
              <div class="card-reveal">
                <span class="card-title grey-text text-darken-4"><?php echo $data['prodtitle']; ?> : <?php echo $data['prodid']; ?><i class="material-icons right">close</i></span>
-               <p>Category: <?php echo $data['catid']; ?></p>
-               <p>Sub-Category: <?php echo $data['subid']; ?></p>
-               <p>Date-Added: <?php echo $data['proddate']; ?></p>
-               <p>Added-By: <?php echo $data['userid']; ?></p>
-               <p>Product-Location: <?php echo $data['prodlocation']; ?></p>
-               <p>Price-Given: <?php echo $data['prodprice']; ?></p>
+               <p><span class="bold">Category:</span> <?php echo $data['catid']; ?></p>
+               <p><span class="bold">Sub-Category:</span> <?php echo $data['subid']; ?></p>
+               <p><span class="bold">Date-Added:</span> <?php echo $data['proddate']; ?></p>
+               <p><span class="bold">Added-By:</span> <?php echo $data['userid']; ?></p>
+               <p><span class="bold">Product-Location:</span> <?php echo $data['prodlocation']; ?></p>
+               <p><span class="bold">Price-Given:</span> <?php echo $data['prodprice']; ?></p>
              </div>
            </div>
           </div>
@@ -114,12 +114,12 @@
              </div>
              <div class="card-reveal">
                <span class="card-title grey-text text-darken-4"><?php echo $data['prodtitle']; ?> : <?php echo $data['prodid']; ?><i class="material-icons right">close</i></span>
-               <p>Category: <?php echo $data['catid']; ?></p>
-               <p>Sub-Category: <?php echo $data['subid']; ?></p>
-               <p>Date-Added: <?php echo $data['proddate']; ?></p>
-               <p>Added-By: <?php echo $data['userid']; ?></p>
-               <p>Product-Location: <?php echo $data['prodlocation']; ?></p>
-               <p>Price-Given: <?php echo $data['prodprice']; ?></p>
+               <p><span class="bold">Category:</span> <?php echo $data['catid']; ?></p>
+               <p><span class="bold">Sub-Category:</span> <?php echo $data['subid']; ?></p>
+               <p><span class="bold">Date-Added:</span> <?php echo $data['proddate']; ?></p>
+               <p><span class="bold">Added-By:</span> <?php echo $data['userid']; ?></p>
+               <p><span class="bold">Product-Location:</span> <?php echo $data['prodlocation']; ?></p>
+               <p><span class="bold">Price-Given:</span> <?php echo $data['prodprice']; ?></p>
              </div>
            </div>
            </div>
@@ -189,12 +189,12 @@
              </div>
              <div class="card-reveal">
                <span class="card-title grey-text text-darken-4"><?php echo $data['prodtitle']; ?> : <?php echo $data['prodid']; ?><i class="material-icons right">close</i></span>
-               <p>Category: <?php echo $data['catid']; ?></p>
-               <p>Sub-Category: <?php echo $data['subid']; ?></p>
-               <p>Date-Added: <?php echo $data['proddate']; ?></p>
-               <p>Added-By: <?php echo $data['userid']; ?></p>
-               <p>Product-Location: <?php echo $data['prodlocation']; ?></p>
-               <p>Price-Given: <?php echo $data['prodprice']; ?></p>
+               <p><span class="bold">Category:</span> <?php echo $data['catid']; ?></p>
+               <p><span class="bold">Sub-Category:</span> <?php echo $data['subid']; ?></p>
+               <p><span class="bold">Date-Added:</span> <?php echo $data['proddate']; ?></p>
+               <p><span class="bold">Added-By:</span> <?php echo $data['userid']; ?></p>
+               <p><span class="bold">Product-Location:</span> <?php echo $data['prodlocation']; ?></p>
+               <p><span class="bold">Price-Given:</span> <?php echo $data['prodprice']; ?></p>
              </div>
            </div>
            </div>
