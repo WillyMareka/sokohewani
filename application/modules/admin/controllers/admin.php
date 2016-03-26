@@ -361,9 +361,38 @@ class Admin extends MY_Controller {
            $proddet['proddet'][] = $values;
        }
 
-       // echo '<pre>';print_r($proddet);echo '</pre>';die;
+        //echo '<pre>';print_r($proddet);echo '</pre>';die;
 
         return $proddet;
+  }
+
+
+  function updateproduct($type, $prod_id)
+  {
+
+    //print_r($prod_id);die();
+    $update = $this->admin_model->updateproduct($type, $prod_id);
+    if($update)
+    {
+      //echo '<pre>';print_r($update);echo '</pre>';die;
+      switch ($type) {
+        case 'approve':
+         
+          $this->productsview();
+          break;
+
+        case 'disapprove':
+         
+          $this->productsview();
+          break;
+        
+        default:
+          # code...
+          break;
+      }
+    }else{
+      echo '<pre>';print_r("Problem found when updating status");echo '</pre>';die;
+    }
   }
 
 

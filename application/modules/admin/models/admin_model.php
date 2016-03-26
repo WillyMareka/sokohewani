@@ -97,20 +97,20 @@ class Admin_model extends MY_Model {
 
 
 
-     public function get_approving_status($prodapprovestate)
+  public function get_approving_status($prodapprovestate)
   {
     $products = array();
     $this->db->order_by("prodid", "desc"); 
-
+ 
           switch ($prodapprovestate) {
               case 'await':
-              $query = $this->db->get_where('products', array('prodavail' => 0,'prodapproval' => 2)); 
+              $query = $this->db->get_where('products', array('prodapproval' => 2, 'prodavail' => 0)); 
               break;
               case 'approved':
-               $query = $this->db->get_where('products', array('prodavail' => 1, 'prodapproval' => 1));
+               $query = $this->db->get_where('products', array('prodapproval' => 1, 'prodavail' => 1));
               break;
               case 'disapproved':
-               $query = $this->db->get_where('products', array('prodavail' => 0, 'prodapproval' => 3));
+               $query = $this->db->get_where('products', array('prodapproval' => 3, 'prodavail' => 0));
               break;
     
               default:
@@ -123,15 +123,106 @@ class Admin_model extends MY_Model {
 
     if ($result) {
       foreach ($result as $key => $value) {
-        $products[$value['prod_id']] = $value;
+        $products[$value['prodid']] = $value;
       }
-      //echo '<pre>';print_r($value);echo '</pre>';die();
+      //echo '<pre>';print_r($products);echo '</pre>';die();
       
       return $products;
     }
     
     return $products;
   }
+
+
+
+
+  public function updateproduct($type, $prod_id)
+  {
+    $data = array();
+    switch ($type) {
+      case 'approve':
+        $data['prodapproval'] = 1; 
+        $data['prodavail'] = 1; 
+        
+        break;
+      
+      case 'disapprove':
+         $data['prodapproval'] = 3;
+         $data['prodavail'] = 0; 
+
+        break;
+
+    }
+    $this->db->where('prodid', $prod_id);
+    $update = $this->db->update('products', $data);
+
+    // if($type=="approve"){
+
+    //       $subject = "New Product Approved";
+    //       $message = 'Product ID '.$prod_id.' was approved';
+
+    //   $mail_to_admin = array();
+    //   $mail_admin = array(
+    //       'subject' => $subject,
+    //       'message' => $message
+    //     );
+
+    //   array_push($mail_to_admin, $mail_admin);
+
+    //   $this->db->insert_batch('mail',$mail_to_admin);
+
+
+    // }elseif ($type=="disapprove") {
+
+
+    //       $subject = "New Product Disapproved";
+    //       $message = 'Product ID '.$prod_id.' was disapproved';
+
+    //   $mail_to_admin = array();
+    //   $mail_admin = array(
+    //       'subject' => $subject,
+    //       'message' => $message
+    //     );
+
+    //   array_push($mail_to_admin, $mail_admin);
+
+    //   $this->db->insert_batch('mail',$mail_to_admin);
+
+
+    // }else{
+
+    //   $subject = "New Product Needs Approval";
+    //   $message = 'New product called '.$productname.' from '.$productcompany.' needs your approval';
+
+    //   $mail_to_manager = array();
+    //   $mail_manager = array(
+    //       'mm_subject' => $subject,
+    //       'mm_message' => $message
+    //     );
+
+    //   array_push($mail_to_manager, $mail_manager);
+
+    //   $this->db->insert_batch('manager_mail',$mail_to_manager);
+    // }
+
+
+
+
+    if ($update) {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+
+
+
+
+
+
 
 
 
