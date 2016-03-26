@@ -66,6 +66,7 @@ class Export extends MY_Controller
         // We'll be outputting an excel file
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate");
+        header('Content-Type: application/vnd.ms-excel');
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
         // It will be called file.xls
