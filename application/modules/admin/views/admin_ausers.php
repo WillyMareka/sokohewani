@@ -1,25 +1,25 @@
  <div class="row">
 
-                
+              
 
                   <div class="col-lg-12">
-                   <h2 class="table-title">Inactive User Profiles</h2>
+                   <h2 class="table-title">Active User Profiles</h2>
                    <div class="table-responsive">
                      <div class="table-toolbar">
                        <div class="btn-group pull-right table-buttons">
 
                       
                        <!-- <a class="left adminadd" href="<?php echo base_url(). 'admin/adduser'?>">Add <?php echo $admin_subtitle?></a> -->
-                       
+                      
+                         
                          <ul class="dropdown-menu">
-                           
-                           <li><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/inactive'?>">Export to PDF</a></li>
-                           <li><a class="green waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/inactive'?>">Export to Excel</a></li>
-                           <li><a class="blue right waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/activeusers'?>">Back to Actives</a></li>
+
+                           <li class="download"><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
+                           <li class="download"><a class="green waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
                          </ul>
                        </div>
                      </div>
-                     <table class="table table-striped" id="homeinuserprofiles"><!-- The table created in the page -->
+                     <table class="table table-striped" id="homeuserprofiles"><!-- The table created in the page -->
                        <thead>
                         <tr>
 
@@ -36,7 +36,7 @@
                         </tr>
                        </thead>
                         <?php
-                          echo $all_dusers; 
+                          echo $all_users; 
                         ?>
                    </table>
 

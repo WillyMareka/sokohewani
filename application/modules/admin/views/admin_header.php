@@ -31,7 +31,7 @@
   <ul id="deactivations" class="dropdown-content">
   <li><a href="<?php echo base_url(). 'admin/inactiveusers'?>">Users</a></li>
   <li><a href="<?php echo base_url(). 'admin/development'?>">Photos</a></li>
-  <li><a href="<?php echo base_url(). 'admin/development'?>">Categories</a></li>
-  <li><a href="<?php echo base_url(). 'admin/development'?>">Sub-Categories</a></li>
+  <li><a href="<?php echo base_url(). 'admin/inactivecategories'?>">Categories</a></li>
+  <li><a href="<?php echo base_url(). 'admin/inactivesubcategories'?>">Sub-Categories</a></li>
   </ul>
        

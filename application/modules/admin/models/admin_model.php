@@ -38,6 +38,54 @@ class Admin_model extends MY_Model {
         return $result->result_array();
     }
 
+    function get_all_categories() {
+        $sql = "SELECT 
+        *
+        FROM  
+          `categories` 
+        WHERE
+        catstatus = 1 ";
+        $result = $this->db->query($sql);
+        //echo "<pre>";print_r($result);echo "</pre>";die();
+        return $result->result_array();
+    }
+
+    function get_all_dcategories() {
+        $sql = "SELECT 
+        *
+        FROM  
+          `categories` 
+        WHERE
+        catstatus = 0";
+        $result = $this->db->query($sql);
+        //echo "<pre>";print_r($result);echo "</pre>";die();
+        return $result->result_array();
+    }
+
+    function get_all_subcategories() {
+        $sql = "SELECT 
+        *
+        FROM  
+          `subcategories` 
+        WHERE
+        subcatstatus = 1 ";
+        $result = $this->db->query($sql);
+        //echo "<pre>";print_r($result);echo "</pre>";die();
+        return $result->result_array();
+    }
+
+    function get_all_dsubcategories() {
+        $sql = "SELECT 
+        *
+        FROM  
+          `subcategories` 
+        WHERE
+        subcatstatus = 0";
+        $result = $this->db->query($sql);
+        //echo "<pre>";print_r($result);echo "</pre>";die();
+        return $result->result_array();
+    }
+
 
     function delete_user($id) {
          $result = $this->db->query("DELETE FROM `users` WHERE userid = '".$id."'"); 
@@ -68,6 +116,60 @@ class Admin_model extends MY_Model {
     }
 
 
+    public function productprofile($id) {
+        $profile = array();
+
+        $query = $this->db->get_where('products', array('prodid' => $id));
+
+        $result = $query->result_array();
+
+        if ($result) {
+            foreach ($result as $key => $value) {
+                $profile[$value['prodid']] = $value;
+            }
+            return $profile;
+        }
+
+        return $profile;
+    }
+
+
+    public function categoryprofile($id) {
+        $profile = array();
+
+        $query = $this->db->get_where('categories', array('catid' => $id));
+
+        $result = $query->result_array();
+
+        if ($result) {
+            foreach ($result as $key => $value) {
+                $profile[$value['catid']] = $value;
+            }
+            return $profile;
+        }
+
+        return $profile;
+    }
+
+
+    public function subcategoryprofile($id) {
+        $profile = array();
+
+        $query = $this->db->get_where('subcategories', array('subid' => $id));
+
+        $result = $query->result_array();
+
+        if ($result) {
+            foreach ($result as $key => $value) {
+                $profile[$value['subid']] = $value;
+            }
+            return $profile;
+        }
+
+        return $profile;
+    }
+
+
 
     public function updateuser($type, $user_id) {
         $data = array();
@@ -87,6 +189,61 @@ class Admin_model extends MY_Model {
 
         $this->db->where('userid', $user_id);
         $update = $this->db->update('users', $data);
+
+        if ($update) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    public function updatecategory($type, $cat_id) {
+        $data = array();
+
+        switch ($type) {
+            case 'catinactive':
+                $data['catstatus'] = 0;
+
+                break;
+
+            case 'catrestore':
+                $data['catstatus'] = 1;
+
+                break;
+        }
+
+
+        $this->db->where('catid', $cat_id);
+        $update = $this->db->update('categories', $data);
+
+        if ($update) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function updatesubcategory($type, $subcat_id) {
+        $data = array();
+
+        switch ($type) {
+            case 'subcatinactive':
+                $data['subcatstatus'] = 0;
+
+                break;
+
+            case 'subcatrestore':
+                $data['subcatstatus'] = 1;
+
+                break;
+        }
+
+
+        $this->db->where('subid', $subcat_id);
+        $update = $this->db->update('subcategories', $data);
 
         if ($update) {
             return true;
