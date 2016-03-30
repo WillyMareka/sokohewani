@@ -10,7 +10,7 @@
 
                       
                        <!-- <a class="left adminadd" href="<?php echo base_url(). 'admin/addsubcategory'?>">Add <?php echo $admin_subtitle?></a> -->
-                       
+                       <a class="left blue waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/newsubcategory'?>">Add New Sub-Category</a>
                          
                          <ul class="dropdown-menu">
 

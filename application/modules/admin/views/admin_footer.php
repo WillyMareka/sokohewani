@@ -1,4 +1,4 @@
-
+<div class="container">
           <div class="container">
             <div class="row">
               <div class="col l6 s12">
@@ -21,5 +21,6 @@
             © 2016 Copyright All rights reserved
             <a class="grey-text text-lighten-4 right" href="#!">www.sokohewani.com</a>
             </div>
+          </div>
           </div>
         

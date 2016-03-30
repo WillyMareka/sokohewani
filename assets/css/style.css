@@ -20,3 +20,27 @@ main{
     font-weight: bold;
   }
 
+/*  .content-view{
+    position: relative;
+  }*/
+
+  .view-details{
+    position: relative;
+      right: 5%;
+  }
+
+  .margin-space{
+    margin-top: 20px;
+  }
+
+  .tabs .tab a{
+    color:#17324e;
+  }
+ 
+  .tabs .tab a:hover{
+  color:#039be5;
+  }
+
+  .tabs .indicator{
+    background-color:#17324e;
+  }

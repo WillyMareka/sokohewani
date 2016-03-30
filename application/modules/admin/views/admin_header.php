@@ -1,15 +1,15 @@
 
   <nav>
     <div class="nav-wrapper">
-      <a href="<?php echo base_url(). 'admin'?>" class="brand-logo center">SokoHewa Limited</a>
+      <a href="<?php echo base_url(). 'admin'?>" class="brand-logo center">SokoHewani Limited</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse">Menu</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="<?php echo base_url(). 'admin/development'?>">Photo requests</a></li>
+        <li><a href="<?php echo base_url(). 'admin/photosview'?>">Photo requests</a></li>
         <li><a class="dropdown-button" data-beloworigin="true" href="#!" data-activates="deactivations">Deactivations<i class="material-icons right">arrow_drop_down</i></a></li>
         <li><a class="dropdown-button" data-beloworigin="true" href="#!" data-activates="profile">Mareka Willy<i class="material-icons right">arrow_drop_down</i></a></li>
       </ul>
       <ul class="side-nav" id="mobile-demo">
-        <li><a href="<?php echo base_url(). 'admin/development'?>">Photo requests</a></li>
+        <li><a href="<?php echo base_url(). 'admin/photosview'?>">Photo requests</a></li>
         <li><a href="<?php echo base_url(). 'admin/development'?>">Deactivations</a></li>
         <li class="divider"></li>
         <li><a href="<?php echo base_url(). 'admin/development'?>">Messages</a></li>
@@ -30,7 +30,7 @@
 
   <ul id="deactivations" class="dropdown-content">
   <li><a href="<?php echo base_url(). 'admin/inactiveusers'?>">Users</a></li>
-  <li><a href="<?php echo base_url(). 'admin/development'?>">Photos</a></li>
+  <li><a href="<?php echo base_url(). 'admin/dphotosview'?>">Photos</a></li>
   <li><a href="<?php echo base_url(). 'admin/inactivecategories'?>">Categories</a></li>
   <li><a href="<?php echo base_url(). 'admin/inactivesubcategories'?>">Sub-Categories</a></li>
   </ul>

@@ -41,10 +41,22 @@ class Admin extends MY_Controller {
 
     }
 
+    function development($data=NULL)
+    {
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_development';
+        $data['footer']='admin/admin_footer';
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
     function activeusers($data=NULL)
     {
 
-        $data['all_users'] = $this->createusersview('table','active');
+        $data['all_users'] = $this->createusersview('table','all');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -61,7 +73,7 @@ class Admin extends MY_Controller {
     function activecategories($data=NULL)
     {
 
-        $data['all_categories'] = $this->createcategoryview('table','active');
+        $data['all_categories'] = $this->createcategoryview('table','all');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -75,14 +87,29 @@ class Admin extends MY_Controller {
 
     }
 
-    function activesubcategories($data=NULL)
+    function newcategory($data=NULL)
     {
 
-        $data['all_subcategories'] = $this->createsubcategoryview('table','active');
-  
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_asubcat';
+        $data['content']='admin/addcategory';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
+    function newsubcategory($data=NULL)
+    {
+
+        $data['category_combo'] = $this->all_category_combo();
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/addsubcategory';
         $data['footer']='admin/admin_footer';
 
         
@@ -161,36 +188,45 @@ class Admin extends MY_Controller {
     }
 
 
-    function development($data=NULL)
+    function photosview($data=NULL)
     {
+
+        $data['photos'] = $this->photoapproving();
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_development';
+        $data['content']='admin/photo_requests';
         $data['footer']='admin/admin_footer';
+
         //echo "<pre>";print_r($data);die();
         $this->template->call_admin_template($data);
 
     }
 
-    
+
+    function activesubcategories($data=NULL)
+    {
+
+        $data['all_subcategories'] = $this->createsubcategoryview('table','all');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_asubcat';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
+
 
     function createusersview($type,$status)
     {
-      
-        switch ($status) {
-            case 'active':
-               $users = $this->admin_model->get_all_users();
-                break;
-
-             case 'inactive':
-                $users = $this->admin_model->get_all_dusers();
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+     
+      $users = $this->admin_model->get_all_users($status);
 
          //echo "<pre>";print_r($users);echo '</pre>';die();
 
@@ -220,10 +256,10 @@ class Admin extends MY_Controller {
             //echo "<pre>";print_r($users);echo "</pre>";die();
             $count++;
                 if ($data['userstatus'] == 1) {
-                    $state = '<span class="btn disabled">Activated</span>';
+                    $state = '<span class="btn green">Activated</span>';
                     $states = 'Activated';
                 } else if ($data['userstatus'] == 0) {
-                    $state = '<span class="btn disabled">Deactivated</span>';
+                    $state = '<span class="btn red">Deactivated</span>';
                     $states = 'Deactivated';
                 }
 
@@ -238,12 +274,12 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$data['userid'].'</td>';
                 $display .= '<td class="centered">'.$data['firstname'].'</td>';
                 $display .= '<td class="centered">'.$data['lastname'].'</td>';
-                $display .= '<td class="centered">'.$data['emaillock_outlineress'].'</td>';
+                $display .= '<td class="centered">'.$data['emailaddress'].'</td>';
                 $display .= '<td class="centered">'.$state.'</td>';
                 
                 $display .= '<td class="centered">'.$date.'</td>';
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/userdetail/'.$data['userid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/userdetail/view/'.$data['userid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['userstatus'] == 0){
                 $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/userupdate/userrestore/'.$data['userid'].'"><i class="material-icons">lock_outline</i></td>';
@@ -324,20 +360,7 @@ class Admin extends MY_Controller {
 
     function createcategoryview($type,$status)
     {
-      
-        switch ($status) {
-            case 'active':
-               $categories = $this->admin_model->get_all_categories();
-                break;
-
-             case 'inactive':
-                $categories = $this->admin_model->get_all_dcategories();
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+        $categories = $this->admin_model->get_all_categories($status);
 
          //echo "<pre>";print_r($users);echo '</pre>';die();
 
@@ -366,10 +389,10 @@ class Admin extends MY_Controller {
             //echo "<pre>";print_r($users);echo "</pre>";die();
             $count++;
                 if ($data['catstatus'] == 1) {
-                    $state = '<span class="btn disabled">Activated</span>';
+                    $state = '<span class="btn green">Activated</span>';
                     $states = 'Activated';
                 } else if ($data['catstatus'] == 0) {
-                    $state = '<span class="btn disabled">Deactivated</span>';
+                    $state = '<span class="btn red">Deactivated</span>';
                     $states = 'Deactivated';
                 }
 
@@ -388,7 +411,7 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$state.'</td>';
                 
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/categorydetail/'.$data['catid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/categorydetail/view/'.$data['catid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['catstatus'] == 0){
                 $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/catupdate/catrestore/'.$data['catid'].'"><i class="material-icons">lock_outline</i></td>';
@@ -465,19 +488,8 @@ class Admin extends MY_Controller {
     function createsubcategoryview($type,$status)
     {
       
-        switch ($status) {
-            case 'active':
-               $subcategories = $this->admin_model->get_all_subcategories();
-                break;
+       $subcategories = $this->admin_model->get_all_subcategories($status);           
 
-             case 'inactive':
-                $subcategories = $this->admin_model->get_all_dsubcategories();
-                break;
-            
-            default:
-                # code...
-                break;
-        }
 
          //echo "<pre>";print_r($users);echo '</pre>';die();
 
@@ -507,10 +519,10 @@ class Admin extends MY_Controller {
             //echo "<pre>";print_r($users);echo "</pre>";die();
             $count++;
                 if ($data['subcatstatus'] == 1) {
-                    $state = '<span class="btn disabled">Activated</span>';
+                    $state = '<span class="btn green">Activated</span>';
                     $states = 'Activated';
                 } else if ($data['subcatstatus'] == 0) {
-                    $state = '<span class="btn disabled">Deactivated</span>';
+                    $state = '<span class="btn red">Deactivated</span>';
                     $states = 'Deactivated';
                 }
 
@@ -530,7 +542,7 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$state.'</td>';
                 
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/subcategorydetail/'.$data['subid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/subcategorydetail/view/'.$data['subid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['subcatstatus'] == 0){
                 $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/subcatupdate/subcatrestore/'.$data['subid'].'"><i class="material-icons">lock_outline</i></td>';
@@ -604,8 +616,105 @@ class Admin extends MY_Controller {
         
     }
 
+    
 
-   function userdetail($id)
+     function create_category($type)
+  {
+    $this->load->library('form_validation');
+
+    switch ($type) {
+                case 'create':
+                    $this->form_validation->set_rules('category-name', 'Category Name', 'trim|required|xss_clean|is_unique[categories.catname]');
+                    break;
+
+                case 'edit':
+                    $this->form_validation->set_rules('category-status', 'Category Name', 'required');
+                    break;
+                
+            }
+        
+        
+        
+        
+
+    if($this->form_validation->run() == FALSE){
+       echo 'Validation Error';die();
+      //redirect(base_url() .'admin/newcategory');
+        
+    }else{
+
+        switch ($type) {
+                case 'create':
+                    $result = $this->admin_model->enter_category();
+                    break;
+
+                case 'edit':
+                    $result = $this->admin_model->category_edit();
+                    break;
+                
+            }
+
+        if($result){
+            
+                redirect(base_url() .'admin/activecategories');
+
+          }else{
+            echo 'No Update';die();
+                //redirect(base_url() .'admin/activecategories');
+        }
+        }
+       
+  }
+
+    function create_subcategory($type)
+  {
+    $this->load->library('form_validation');
+
+    switch ($type) {
+        case 'create':
+           $this->form_validation->set_rules('sub-category-name', 'Sub-Category Name', 'trim|required|xss_clean|is_unique[subcategories.subname]');
+            break;
+
+        case 'edit':
+            $this->form_validation->set_rules('sub-category-status', 'Sub-Category Status', 'required');
+            break;
+       
+    }
+        
+        
+        
+        
+
+    if($this->form_validation->run() == FALSE){
+       echo 'Validation Error';die();
+      //redirect(base_url() .'admin/newcategory');
+        
+    }else{
+           switch ($type) {
+                case 'create':
+                    $result = $this->admin_model->enter_subcategory();
+                    break;
+
+                case 'edit':
+                    $result = $this->admin_model->sub_category_edit();
+                    break;
+                
+            }
+
+        if($result){
+
+            
+                redirect(base_url() .'admin/activesubcategories');
+
+          }else{
+                redirect(base_url() .'admin/activesubcategories');
+        }
+        }
+       
+  }
+
+
+   function userdetail($type,$id)
     {
         //$this->log_check();
         $userdet = array();
@@ -623,7 +732,15 @@ class Admin extends MY_Controller {
 
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_development';
+        switch ($type) {
+          case 'view':
+              $data['content']='admin/view_user';
+              break;
+
+          case 'edit':
+             $data['content']='admin/edituser';
+              break;
+        }
         $data['footer']='admin/admin_footer';
 
         
@@ -661,7 +778,7 @@ class Admin extends MY_Controller {
     }
 
 
-    function categorydetail($id)
+    function categorydetail($type,$id)
     {
         //$this->log_check();
         $userdet = array();
@@ -679,7 +796,16 @@ class Admin extends MY_Controller {
 
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_development';
+
+         switch ($type) {
+          case 'view':
+              $data['content']='admin/view_category';
+              break;
+
+          case 'edit':
+             $data['content']='admin/editcategory';
+              break;
+      }
         $data['footer']='admin/admin_footer';
 
         
@@ -688,8 +814,7 @@ class Admin extends MY_Controller {
  
     }
 
-
-    function subcategorydetail($id)
+    function subcategorydetail($type,$id)
     {
         //$this->log_check();
         $userdet = array();
@@ -707,10 +832,44 @@ class Admin extends MY_Controller {
 
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_development';
+
+      switch ($type) {
+          case 'view':
+              $data['content']='admin/view_subcategory';
+              break;
+
+          case 'edit':
+             $data['content']='admin/editsubcategory';
+              break;
+      }
+
         $data['footer']='admin/admin_footer';
 
         
+        
+        $this->template->call_admin_template($data);
+ 
+    }
+
+    function subpercategory($id)
+    {
+        //$this->log_check();
+        $userdet = array();
+
+        
+        $results = $this->admin_model->subpercategory($id);
+
+        foreach ($results as $key => $values) {
+            $details['subcategories'][] = $values;  
+        }
+        
+        
+        $data['subcategorydetails'] = $details;
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/view_subpercategory';
+        $data['footer']='admin/admin_footer';      
         
         $this->template->call_admin_template($data);
  
@@ -809,21 +968,18 @@ class Admin extends MY_Controller {
             switch ($type) {
 
                 case 'catinactive':
-                    $this->inactivecategories();
-                    
+                    $this->inactivecategories();    
                     break;
 
                 case 'catrestore':
                     $this->activecategories();
-                    
                     break;
                 
-                default:
-                    # code...
-                    break;
             }
         }
     }
+
+
 
     function subcatupdate($type, $subcat_id)
     {
@@ -843,9 +999,6 @@ class Admin extends MY_Controller {
                     
                     break;
                 
-                default:
-                    # code...
-                    break;
             }
         }
     }
@@ -878,6 +1031,23 @@ class Admin extends MY_Controller {
         return $proddet;
   }
 
+  function photoapproving()
+  {
+    $proddet = array();
+    
+    $results = $this->admin_model->photo_approving_status();
+            
+       
+       foreach ($results as $key => $values) {  
+           $proddet['proddet'][] = $values;
+       }
+
+        //echo '<pre>';print_r($proddet);echo '</pre>';die;
+
+        return $proddet;
+  }
+
+
 
   function updateproduct($type, $prod_id)
   {
@@ -906,6 +1076,55 @@ class Admin extends MY_Controller {
       echo '<pre>';print_r("Problem found when updating status");echo '</pre>';die;
     }
   }
+
+  
+
+  function edituser(){
+     
+       $this->load->library('form_validation');
+        
+       $this->form_validation->set_rules('user-status', 'User Status', 'required');
+        
+        
+
+    if($this->form_validation->run() == FALSE){
+       echo 'Validation error';die();
+      //redirect(base_url() .'admin/activeusers');
+        
+    }else{
+ 
+          $result = $this->admin_model->user_edit();
+               //print_r($result);
+
+        if($result){
+                redirect(base_url() .'admin/activeusers');
+
+          }else{
+            redirect(base_url() .'admin/activeusers');
+                 // echo 'There was a problem with the website.<br/>Please contact the administrator';
+        }
+        }
+         
+    
+  }
+
+  
+
+
+
+  function all_category_combo()
+    {
+        $categories = $this->admin_model->get_avail_categories();
+        // echo "<pre>";print_r($categories);die();
+        $this->categories_combo .= '<select name="category-id" id="category-id">';
+        $this->categories_combo .= '<option value="" disabled selected>Choose your option</option>';
+        foreach ($categories as $key => $value) {
+            $this->categories_combo .= '<option value="'.$value['catid'].'">'.$value['catname'].'</option>';
+        }
+        $this->categories_combo .= '</select>';
+
+        return $this->categories_combo;
+    }
 
 
   

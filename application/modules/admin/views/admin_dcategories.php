@@ -15,7 +15,7 @@
                            
                            <li><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url().'admin/createcategoryview/pdf/inactive'?>">Export to PDF</a></li>
                            <li><a class="green waves-effect waves-light btn-large" href="<?php echo base_url().'admin/createcategoryview/excel/inactive'?>">Export to Excel</a></li>
-                           <li><a class="blue right waves-effect waves-light btn-large" href="<?php echo base_url().'admin/activecategories'?>">Back to Actives</a></li>
+                           <li><a class="blue right waves-effect waves-light btn-large" href="<?php echo base_url().'admin/activecategories'?>">Back to Categories</a></li>
                          </ul>
                        </div>
                      </div>

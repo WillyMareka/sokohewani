@@ -25,7 +25,7 @@
                       		?>
 
         <div class="col s12 m4">
-          <div class="card small">
+          <div class="card small hoverable">
              <div class="card-image waves-effect waves-block waves-light">
                <!-- <img class="activator" src="<?php echo $data['photopath']; ?>"> -->
              </div>
@@ -61,7 +61,7 @@
 
                      <div class="row">
                        <div class="col s12 m4">
-                         <div class="card small">
+                         <div class="card medium hoverable">
                            <div class="card-image">
                              <img src="<?php echo base_url().'assets/images/noawaiting.jpg'?>"/>
                              <!-- <span class="card-title">No Products found</span> -->
@@ -102,7 +102,7 @@
                       		?>
 
          <div class="col s12 m4">
-          <div class="card small">
+          <div class="card small hoverable">
              <div class="card-image waves-effect waves-block waves-light">
                <!-- <img class="activator" src="<?php echo $data['photopath']; ?>"> -->
              </div>
@@ -137,7 +137,7 @@
 
       <div class="row">
         <div class="col s12 m4">
-          <div class="card medium">
+          <div class="card medium hoverable">
             <div class="card-image">
               <img src="<?php echo base_url().'assets/images/noapproves.jpg'?>"/>
               <!-- <span class="card-title">No Products found</span> -->
@@ -177,7 +177,7 @@
                       		?>
       
          <div class="col s12 m4">
-          <div class="card small">
+          <div class="card small hoverable">
              <div class="card-image waves-effect waves-block waves-light">
                <!-- <img class="activator" src="<?php echo $data['photopath']; ?>"> -->
              </div>
@@ -212,7 +212,7 @@
 
       <div class="row">
         <div class="col s10 m4">
-          <div class="card small">
+          <div class="card medium hoverable">
             <div class="card-image">
               <img src="<?php echo base_url().'assets/images/nodisapproves.jpg'?>"/>
               <!-- <span class="card-title">No Products found</span> -->
