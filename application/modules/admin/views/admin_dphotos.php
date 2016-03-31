@@ -1,17 +1,17 @@
-<h1 class="bold">Photo Requests</h1>
+<h1 class="bold">Photo Rejects</h1>
 <p><hr/></p>
 
 <div class="row">
         
 
-          <?php if($photos){
-                        foreach ($photos as $key => $value) {
-                      	 foreach ($value as $q => $data) {
-                      		
-                      		//echo '<pre>';print_r($waits);echo'</pre>';die();
-                      		for ($i=0; $i <= $key ; $i++) { 
-                      			
-                      		?>
+          <?php if($dphotos){
+                        foreach ($dphotos as $key => $value) {
+                         foreach ($value as $q => $data) {
+                          
+                          //echo '<pre>';print_r($waits);echo'</pre>';die();
+                          for ($i=0; $i <= $key ; $i++) { 
+                            
+                          ?>
 <!-- <div class="col s12 m4 hoverable margin-space"> 
 
   <img class="materialboxed" data-caption="For Product-ID:<?php echo $data['prodid'];?> -- <?php echo $data['photoinfo'];?>" width="350" src="<?php echo base_url(). 'assets/images/mareka.jpg'?>">
@@ -48,35 +48,35 @@
 
                   <?php 
                           }
-                      	}
+                        }
                     } 
                   ?>
                         
                   
                   <?php    
                   }else{
-				  ?>
+          ?>
                   
             <div class="row">
               <div class="col s12 m6">
                 <div class="card blue-grey darken-1">
                   <div class="card-content white-text">
-                    <span class="card-title">No pending photos</span>
-                    <p>No user has requested for a new photo update</p>
+                    <span class="card-title">No reject photos</span>
+                    <p>There are no disapproved photos yet</p>
                   </div>
                   <div class="card-action">
-                  <a href="<?php echo base_url(). 'admin'?>">Admin Home Page</a>
-                    <a href="<?php echo base_url(). 'admin/inactivephotos'?>">Rejected Photos</a>
+                    <a href="<?php echo base_url(). 'admin'?>">Admin Home Page</a>
+                    <a href="<?php echo base_url(). 'admin/photosview'?>">Pending Photos</a>
                   </div>
                 </div>
               </div>
             </div>
 
-				  <?php
-					
-				   }
+          <?php
+          
+           }
 
-				 ?>
+         ?>
 
 
 

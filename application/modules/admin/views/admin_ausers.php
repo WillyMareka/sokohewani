@@ -4,25 +4,21 @@
 
                   <div class="col-lg-12">
                    <h2 class="table-title">Active User Profiles</h2>
+                   <p><hr/></p>
+
                    <div class="table-responsive">
                      <div class="table-toolbar">
                        <div class="btn-group pull-right table-buttons">
-
-                      
-                       <!-- <a class="left adminadd" href="<?php echo base_url(). 'admin/adduser'?>">Add <?php echo $admin_subtitle?></a> -->
-                      
-                         
                          <ul class="dropdown-menu">
-
                            <li class="download"><a class="left red waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/pdf/active'?>">Export to PDF</a></li>
                            <li class="download"><a class="green waves-effect waves-light btn-large" href="<?php echo base_url(). 'admin/createusersview/excel/active'?>">Export to Excel</a></li>
                          </ul>
                        </div>
                      </div>
-                     <table class="table table-striped" id="homeuserprofiles"><!-- The table created in the page -->
+
+                     <table class="table table-striped datatable" id="homeuserprofiles"><!-- The table created in the page -->
                        <thead>
                         <tr>
-
                           <th>#</th>
                           <th>User ID</th>
                           <th>First Name</th>

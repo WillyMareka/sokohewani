@@ -5,7 +5,7 @@ $(".button-collapse").sideNav();
 $(".dropdown-button").dropdown();
 $('select').material_select();
 $('.materialboxed').materialbox();
-// $('select').material_select('destroy');
+$('.scrollspy').scrollSpy();
 
 //materialize//
 
@@ -14,9 +14,8 @@ $('.materialboxed').materialbox();
 
 
 $('#homeuserprofiles').dataTable( {
-  language: {
-        searchPlaceholder: "Search for profile"
-    }
+    dom : 'Bfrtip',
+    select : true
   } );
 
 

@@ -8,6 +8,16 @@ main{
     flex: 1 0 auto;
   }
 
+/*header, main, footer {
+  padding-left: 240px;
+}
+
+@media only screen and (max-width : 992px) {
+  header, main, footer {
+    padding-left: 0;
+  }
+}*/
+
   nav{
   	background-color:#17324e;
   }
@@ -43,4 +53,14 @@ main{
 
   .tabs .indicator{
     background-color:#17324e;
+  }
+
+  .section{
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+  }
+
+  .side-nav a.sidebarmenu{
+    background-color:#311b92;
+    color: #ffffff;
   }

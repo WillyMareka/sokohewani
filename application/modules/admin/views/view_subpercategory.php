@@ -1,3 +1,5 @@
+<h1 class="bold">Sub-Category View of Category-ID </h1><?php echo $data['catid']; ?>
+<p><hr/></p>
 
 <div class="row">
         
@@ -14,6 +16,7 @@
 
 <div class="card-content black-text">
     <h1><span class="card-title">Sub-Category Name : </span><?php echo $data['subname']; ?></h1>
+    <p><hr/></p>
     <p><span class="bold">Category Name : </span><?php echo $data['catid']; ?></p>
     <p><span class="bold">Date Registered : </span><?php echo $data['subdate']; ?></p>
     <p><span class="bold">Status : </span><?php echo $data['subcatstatus']; ?></p>

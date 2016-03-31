@@ -1,3 +1,6 @@
+<h1 class="bold">User View</h1><?php echo $data['catid']; ?>
+<p><hr/></p>
+
 <?php foreach ($userdetails as $key => $value) {
                             foreach ($value as $q => $data) {
                             
@@ -9,6 +12,7 @@
 
 
 <h1><span class="bold">ID : </span><?php echo $data['userid']; ?></h1>
+<p><hr/></p>
 <p><span class="bold">First Name : </span><?php echo $data['firstname']; ?></p>
 <p><span class="bold">Last Name : </span><?php echo $data['lastname']; ?></p>
 <p><span class="bold">Email Address : </span><?php echo $data['emailaddress']; ?></p>

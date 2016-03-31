@@ -440,12 +440,28 @@ class Admin_model extends MY_Model {
   }
 
 
-  public function photo_approving_status()
+  public function photo_approving_status($type)
   {
     $products = array();
     $this->db->order_by("photoid", "desc"); 
 
-    $query = $this->db->get_where('photos', array('photostatus' => 2)); 
+    switch ($type) {
+      case 'wait':
+        $query = $this->db->get_where('photos', array('photostatus' => 2)); 
+        break;
+
+      case 'approves':
+        $query = $this->db->get_where('photos', array('photostatus' => 1)); 
+        break;
+
+      case 'disapproves':
+        $query = $this->db->get_where('photos', array('photostatus' => 0)); 
+        break;
+      
+      
+    }
+
+    
 
     $result = $query->result_array();
 
@@ -747,6 +763,154 @@ class Admin_model extends MY_Model {
         $result = $this->db->query($sql);
         return $result->result_array();
     }
+
+
+
+
+    public function usernumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`userid`) as users FROM users";
+          break;
+
+        case 'active':
+          $sql = "SELECT COUNT(`userid`) as users FROM users WHERE userstatus = 1";
+          break;
+
+        case 'inactive':
+          $sql = "SELECT COUNT(`userid`) as users FROM users WHERE userstatus = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->users;
+   }
+
+
+   public function productnumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products";
+          break;
+
+        case 'active':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products WHERE prodavail = 1";
+          break;
+
+        case 'inactive':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products WHERE prodavail = 0";
+          break;
+
+        case 'wait':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products WHERE prodapproval = 2";
+          break;
+
+        case 'approve':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products WHERE prodapproval = 1";
+          break;
+
+        case 'disapprove':
+          $sql = "SELECT COUNT(`prodid`) as products FROM products WHERE prodapproval = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->products;
+   }
+
+
+   public function photonumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`photoid`) as photos FROM photos";
+          break;
+
+        case 'wait':
+          $sql = "SELECT COUNT(`photoid`) as photos FROM photos WHERE photostatus = 2";
+          break;
+
+        case 'active':
+          $sql = "SELECT COUNT(`photoid`) as photos FROM photos WHERE photostatus = 1";
+          break;
+
+        case 'inactive':
+          $sql = "SELECT COUNT(`photoid`) as photos FROM photos WHERE photostatus = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->photos;
+   }
+
+
+   public function categorynumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`catid`) as categories FROM categories";
+          break;
+
+        case 'active':
+          $sql = "SELECT COUNT(`catid`) as categories FROM categories WHERE catstatus = 1";
+          break;
+
+        case 'inactive':
+          $sql = "SELECT COUNT(`catid`) as categories FROM categories WHERE catstatus = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->categories;
+   }
+
+
+   public function subcategorynumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`subid`) as subcategories FROM subcategories";
+          break;
+
+        case 'active':
+          $sql = "SELECT COUNT(`subid`) as subcategories FROM subcategories WHERE subcatstatus = 1";
+          break;
+
+        case 'inactive':
+          $sql = "SELECT COUNT(`subid`) as subcategories FROM subcategories WHERE subcatstatus = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->subcategories;
+   }
 
 
 

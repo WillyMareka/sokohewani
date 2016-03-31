@@ -1,3 +1,6 @@
+<h1 class="bold">Sub-Category View</h1>
+<p><hr/></p>
+
 <?php foreach ($subcategorydetails as $key => $value) {
                             foreach ($value as $q => $data) {
                             
@@ -9,6 +12,7 @@
 
 
 <h1><span class="bold">Sub-Category Name : </span><?php echo $data['subname']; ?></h1>
+<p><hr/></p>
 <p><span class="bold">Category Name : </span><?php echo $data['catid']; ?></p>
 <p><span class="bold">Date Registered : </span><?php echo $data['subdate']; ?></p>
 <p><span class="bold">Status : </span><?php echo $data['subcatstatus']; ?></p>

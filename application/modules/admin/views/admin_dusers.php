@@ -4,6 +4,7 @@
 
                   <div class="col-lg-12">
                    <h2 class="table-title">Inactive User Profiles</h2>
+                   <p><hr/></p>
                    <div class="table-responsive">
                      <div class="table-toolbar">
                        <div class="btn-group pull-right table-buttons">

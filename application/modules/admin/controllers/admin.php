@@ -27,6 +27,21 @@ class Admin extends MY_Controller {
 
     function index($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+
+        
 
         $data['all_users'] = $this->createusersview('table','active');
   
@@ -36,10 +51,19 @@ class Admin extends MY_Controller {
         $data['footer']='admin/admin_footer';
 
         
-        //echo "<pre>";print_r($data);die();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
         $this->template->call_admin_template($data);
 
     }
+
+    // function getnumbers(){
+    //     $data['inusernumber']  = $this->getusernumber('inactive');
+    //     $data['inphotonumber']  = $this->getphotonumber('inactive');
+    //     $data['incategorynumber']  = $this->getcategorynumber('inactive');
+    //     $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+
+    //     return $data;
+    // }
 
     function development($data=NULL)
     {
@@ -55,6 +79,20 @@ class Admin extends MY_Controller {
 
     function activeusers($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+
 
         $data['all_users'] = $this->createusersview('table','all');
   
@@ -72,6 +110,19 @@ class Admin extends MY_Controller {
 
     function activecategories($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['all_categories'] = $this->createcategoryview('table','all');
   
@@ -89,6 +140,19 @@ class Admin extends MY_Controller {
 
     function newcategory($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -104,6 +168,19 @@ class Admin extends MY_Controller {
 
     function newsubcategory($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['category_combo'] = $this->all_category_combo();
 
@@ -122,6 +199,19 @@ class Admin extends MY_Controller {
     
     function inactiveusers($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['all_dusers'] = $this->createusersview('table','inactive');
   
@@ -138,6 +228,19 @@ class Admin extends MY_Controller {
 
     function inactivecategories($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['all_dcategories'] = $this->createcategoryview('table','inactive');
   
@@ -154,6 +257,19 @@ class Admin extends MY_Controller {
 
     function inactivesubcategories($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['all_dsubcategories'] = $this->createsubcategoryview('table','inactive');
   
@@ -172,6 +288,19 @@ class Admin extends MY_Controller {
 
     function productsview($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['waits'] = $this->productapproving('await');
         $data['approves'] = $this->productapproving('approved');
@@ -190,8 +319,21 @@ class Admin extends MY_Controller {
 
     function photosview($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
 
-        $data['photos'] = $this->photoapproving();
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+
+        $data['photos'] = $this->photoapproving('wait');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -203,9 +345,50 @@ class Admin extends MY_Controller {
 
     }
 
+    function inactivephotos($data=NULL)
+    {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+
+        $data['photos'] = $this->photoapproving('disapproves');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_dphotos';
+        $data['footer']='admin/admin_footer';
+
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+    }
+
 
     function activesubcategories($data=NULL)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
 
         $data['all_subcategories'] = $this->createsubcategoryview('table','all');
   
@@ -752,6 +935,19 @@ class Admin extends MY_Controller {
 
     function productdetail($id)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
         //$this->log_check();
         $userdet = array();
 
@@ -780,6 +976,19 @@ class Admin extends MY_Controller {
 
     function categorydetail($type,$id)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
         //$this->log_check();
         $userdet = array();
 
@@ -816,6 +1025,19 @@ class Admin extends MY_Controller {
 
     function subcategorydetail($type,$id)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
         //$this->log_check();
         $userdet = array();
 
@@ -853,6 +1075,19 @@ class Admin extends MY_Controller {
 
     function subpercategory($id)
     {
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
         //$this->log_check();
         $userdet = array();
 
@@ -1031,11 +1266,11 @@ class Admin extends MY_Controller {
         return $proddet;
   }
 
-  function photoapproving()
+  function photoapproving($type)
   {
     $proddet = array();
     
-    $results = $this->admin_model->photo_approving_status();
+    $results = $this->admin_model->photo_approving_status($type);
             
        
        foreach ($results as $key => $values) {  
@@ -1129,7 +1364,50 @@ class Admin extends MY_Controller {
 
   
 
+    public function getusernumber($type)
+    {
+          $results = $this->admin_model->usernumber($type);
 
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
+
+    public function getproductnumber($type)
+    {
+          $results = $this->admin_model->productnumber($type);
+
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
+
+    public function getphotonumber($type)
+    {
+          $results = $this->admin_model->photonumber($type);
+
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
+
+    public function getcategorynumber($type)
+    {
+          $results = $this->admin_model->categorynumber($type);
+
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
+
+    public function getsubcategorynumber($type)
+    {
+          $results = $this->admin_model->subcategorynumber($type);
+
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
 
 
 

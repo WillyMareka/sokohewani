@@ -2,8 +2,9 @@
   <div class="row">
     <div class="col s12">
       <ul class="tabs">
-        <li class="tab col s3"><a href="#awaits">Awaiting Approval</a></li>
-        <li class="tab col s3"><a class="active" href="#approves">Active Products</a></li>
+        
+        <li class="tab col s3"><a href="#approves">Active Products</a></li>
+        <li class="tab col s3"><a class="active" href="#awaits">Awaiting Approval</a></li>
         <!-- <li class="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li> -->
         <li class="tab col s3"><a href="#disapproves">Disapproved Products</a></li>
       </ul>

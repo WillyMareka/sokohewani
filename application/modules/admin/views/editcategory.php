@@ -1,3 +1,6 @@
+<h1 class="bold">Category Edit</h1>
+<p><hr/></p>
+
 <div class="row margin-space">
     <form  enctype="multipart/form-data" method="POST" action="<?php echo base_url(). 'admin/create_category/edit'?>" class="form-horizontal" role="form" class="col s12">
 

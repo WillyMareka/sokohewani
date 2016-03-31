@@ -1,3 +1,6 @@
+<h1 class="bold">Category View</h1>
+<p><hr/></p>
+
 <?php foreach ($categorydetails as $key => $value) {
                             foreach ($value as $q => $data) {
                             
@@ -9,6 +12,7 @@
 
 
 <h1><span class="bold">Category Name : </span><?php echo $data['catname']; ?></h1>
+<p><hr/></p>
 <p><span class="bold">Date Registered : </span><?php echo $data['catdate']; ?></p>
 <p><span class="bold">Status : </span><?php echo $data['catstatus']; ?></p>
 <p><span class="bold">Description : </span><?php echo $data['catdescription']; ?></p>
