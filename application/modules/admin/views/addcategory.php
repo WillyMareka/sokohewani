@@ -1,7 +1,7 @@
 <h1>Add New Category</h1>
 <p><hr/></p>
 <div class="row">
-    <form  role="form"  enctype="multipart/form-data" method="POST" action="<?php echo base_url() . 'admin/create_category/create'?>" class="form-horizontal" class="col s12">
+    <form role="form" enctype="multipart/form-data" method="POST" action="<?php echo base_url() . 'admin/create_category/create'?>" class="form-horizontal" class="col s12">
       <div class="row">
         <div class="input-field col s6">
           <input id="category-name" name="category-name" type="text" class="validate">

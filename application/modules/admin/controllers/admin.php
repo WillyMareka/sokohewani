@@ -27,6 +27,13 @@ class Admin extends MY_Controller {
 
     function index($data=NULL)
     {
+
+        $this->template->call_adminlogin_template();
+
+    }
+
+    function adminview($data=NULL)
+    {
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
@@ -53,17 +60,8 @@ class Admin extends MY_Controller {
         
         //echo "<pre>";print_r($data);echo "</pre>";die();
         $this->template->call_admin_template($data);
-
     }
 
-    // function getnumbers(){
-    //     $data['inusernumber']  = $this->getusernumber('inactive');
-    //     $data['inphotonumber']  = $this->getphotonumber('inactive');
-    //     $data['incategorynumber']  = $this->getcategorynumber('inactive');
-    //     $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
-
-    //     return $data;
-    // }
 
     function development($data=NULL)
     {
