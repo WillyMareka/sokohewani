@@ -2,7 +2,7 @@
 <p><hr/></p>
 
 <div class="row margin-space">
-    <form  enctype="multipart/form-data" method="POST" action="<?php echo base_url(). 'admin/edituser'?>" class="form-horizontal" role="form" class="col s12">
+    <form  enctype="multipart/form-data" method="POST" action="<?php echo base_url(). 'admin/edituser'?>" class="form-horizontal" role="form" class="col s12 m6">
 
 <?php foreach ($userdetails as $key => $value) {
                             foreach ($value as $q => $data) {
@@ -17,28 +17,28 @@
 
    <div class="row">
     <div class="input-field col s6">
-      <input disabled value="<?php echo $data['firstname']; ?>" id="first-name" name="first-name" type="text" class="validate">
+      <input disabled value="<?php echo $data['firstname']; ?>" required id="first-name" name="first-name" type="text" class="validate">
       <label class="active" for="first-name">First Name</label>
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      <input disabled value="<?php echo $data['lastname']; ?>" id="last-name" name="last-name" type="text" class="validate">
+      <input disabled value="<?php echo $data['lastname']; ?>" required id="last-name" name="last-name" type="text" class="validate">
       <label class="active" for="last-name">Last Name</label>
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      <input disabled value="<?php echo $data['emailaddress']; ?>" id="email-address" name="email-address" type="text" class="validate">
+      <input disabled value="<?php echo $data['emailaddress']; ?>" required id="email-address" name="email-address" type="email" class="validate">
       <label class="active" for="email-address">Email Address</label>
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      <input disabled value="<?php echo $data['regdate']; ?>" id="reg-date" name="reg-date" type="text" class="validate">
+      <input disabled value="<?php echo $data['regdate']; ?>" id="reg-date" required name="reg-date" type="text" class="validate">
       <label class="active" for="reg-date">Registration Date</label>
     </div>
   </div>
@@ -74,8 +74,11 @@
         
       </div>
 
-      <a href="<?php echo base_url(). 'admin/categorydetail/'?><?php echo $data['catid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
+      <a href="<?php echo base_url(). 'admin/userdetail/view/'?><?php echo $data['userid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
                         
 
         </form>
   </div>
+
+
+  

@@ -35,6 +35,19 @@
  	<nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">Admin Login</a>
+      <?php if ($this->session->userdata('logged_in')==1) {?>
+
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="<?php echo base_url().'admin/adminview'?>">Admin Page</a></li>
+            <li><a href="<?php echo base_url().'admin/logout'?>">Logout</a></li>
+        </ul> 
+
+     <?php } else { ?>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="#"></a></li>
+        </ul> 
+    <?php  } ?>
+
       <!-- <ul id="nav-mobile" class="left hide-on-med-and-down">
         <li><a href="sass.html">Sass</a></li>
         <li><a href="badges.html">Components</a></li>
@@ -53,12 +66,12 @@
             <hr/>
             <div class="login-cred container">
                 <div class="row ">
-                  <form role="form" enctype="multipart/form-data" method="POST" action="<?php echo base_url() . 'admin/login'?>" class="form-horizontal">
+                  <form role="form" enctype="multipart/form-data" method="POST" action="<?php echo base_url() . 'admin/validate_admin'?>" class="form-horizontal">
                     <div class="row">
                       <div class="input-field col s12 m12">
                         <i class="material-icons prefix">account_circle</i>
                         <input name="loguser" id="loguser" type="text" class="validate">
-                        <label for="username">Username</label>
+                        <label for="loguser">Username</label>
                       </div>
                     </div>
         
@@ -72,11 +85,35 @@
                     
                     <div class="row">
                       <div class="input-field col s12 m12 center">
-                         <a class="waves-effect waves-light btn"><i class="material-icons right">open_in_browser</i>Log In</a>
+                         <button class="btn waves-effect waves-light" type="submit" name="action">Login
+                            <i class="material-icons right">open_in_browser</i>
+                         </button>
                       </div>
                     </div>
+
+                    <a class="btn-flat hover-underline">Forget Password ?</a>
+
+                    
       
                   </form>
+
+
+                       <?php
+                        if (isset($logmessage)){
+                        ?>
+                           <div class="card-panel black-text white">
+                              <?php echo $logmessage; ?>
+                           </div>
+                        <?php } elseif (!(isset($logmessage))) { ?>
+                            <div class="card-panel black-text white">
+                              <?php echo "Please enter Username and Password"; ?>
+                            </div>
+                        <?php } elseif (null !== validation_errors()) { ?>
+                            <div class="card-panel black-text white">
+                              <?php echo validation_errors(); ?>
+                            </div>
+                        <?php } ?>
+                        
                 </div>
                </div>
 

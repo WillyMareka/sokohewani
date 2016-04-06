@@ -59,7 +59,7 @@
         
       </div>
 
-      <a href="<?php echo base_url(). 'admin/subcategorydetail/'?><?php echo $data['subid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
+      <a href="<?php echo base_url(). 'admin/subcategorydetail/view/'?><?php echo $data['subid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
                         
 
         </form>

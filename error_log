@@ -1,0 +1,1 @@
+[06-Apr-2016 10:09:22 Africa/Nairobi] PHP Fatal error:  Call to undefined method CI_Email::__destruct() in /home/bingwali/public_html/sokoadmin/application/libraries/MY_Email.php on line 118

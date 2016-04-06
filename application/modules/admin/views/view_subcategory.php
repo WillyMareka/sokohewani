@@ -15,7 +15,13 @@
 <p><hr/></p>
 <p><span class="bold">Category Name : </span><?php echo $data['catid']; ?></p>
 <p><span class="bold">Date Registered : </span><?php echo $data['subdate']; ?></p>
-<p><span class="bold">Status : </span><?php echo $data['subcatstatus']; ?></p>
+<p><span class="bold">Status : </span><?php if($data['subcatstatus'] == 0){
+                  	echo "Deactivated";
+                  }elseif ($data['subcatstatus'] == 1) {
+                  	echo "Activated";
+                  }
+ 
+	// echo $data['subcatstatus']; ?></p>
 <p><span class="bold">Description : </span><?php echo $data['subdescription']; ?></p>
 
 <a href="<?php echo base_url(). 'admin/activesubcategories'?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to Sub-Categories</a>

@@ -5,7 +5,7 @@
 
       <div class="row">
         <div class="input-field col s6">
-          <input id="sub-category-name" name="sub-category-name" type="text" class="validate">
+          <input id="sub-category-name" required name="sub-category-name" type="text" class="validate">
           <label for="sub-category-name">Sub-Category Name</label>
         </div>
       </div>
@@ -39,4 +39,18 @@
 
 
     </form>
+
+    <?php
+                        if (isset($logmessage)){
+                        ?>
+                           <div class="card-panel black-text white">
+                              <?php echo $logmessage; ?>
+                           </div>
+                        <?php } elseif (!(isset($logmessage))) { ?>
+                           
+                        <?php } elseif (null !== validation_errors()) { ?>
+                            <div class="card-panel black-text white">
+                              <?php echo validation_errors(); ?>
+                            </div>
+                        <?php } ?>
   </div>

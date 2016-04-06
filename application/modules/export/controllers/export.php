@@ -89,7 +89,7 @@ $image=base_url().'assets/images/mareka.jpg';
 $html_title="<div align=center><img src='$image' height='70' width='70'style='vertical-align: top;'> </img></div>
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>".$pdf_data['pdf_title']."</div>
 
-<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>Asset Management</div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>SokoHewani Limited</div>
 
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>".$pdf_data['pdf_topic']." Report</div><hr/>";
 
@@ -223,5 +223,41 @@ endif;
 
     return $high_chart;     
   }
+
+
+public function phpmailer($email_data=null){
+            $this->load->library('email');
+            $this->load->library('Mailer');
+
+  $mail = new PHPMailer();
+    $mail->IsSMTP('smtp');                                      // Set mailer to use SMTP
+    $mail->Host = 'smtp.gmail.com';                 // Specify main and backup server
+    $mail->Port = 587;                                    // Set the SMTP port
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = 'marekawilly@gmail.com';                // SMTP username
+    $mail->Password = 'MachariA0714135480';                  // SMTP password
+    $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+    $mail->SMTPDebug = 0;
+
+    $mail->From = 'marekawilly@gmail.com';
+    $mail->FromName = 'Mareka Willy';
+    $mail->AddAddress('orregumathi@gmail.com', 'Orre Gumathi');  // Add a recipient              // Name is optional
+
+    $mail->IsHTML(true);                                  // Set email format to HTML
+
+    $mail->Subject = 'SokoHewani Limited';
+    $mail->Body    = 'SokoHewani has hacked your gmail account. Tunatext mamshee nayo. Thank you!!!';
+    $mail->AltBody = 'Na tunajua huyo mshee wako wa Nairobi University';
+
+    if(!$mail->Send()) {
+       echo 'Message could not be sent.';
+       echo 'Mailer Error: ' . $mail->ErrorInfo;
+       exit;
+    }else{
+      // echo'Email Sent' ;die();
+    }
+
+}
+
 
 }

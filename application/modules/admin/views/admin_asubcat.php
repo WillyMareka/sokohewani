@@ -28,7 +28,7 @@
                           <th>Sub-Category Name</th>
                           <!-- <th>Description</th> -->
                           <th>Date Registered</th>
-                          <th>Category ID</th>
+                          <th>Category</th>
                           <th>Sub-Category Status</th>
                           <th>View</th>
                           <th>Change Status</th>

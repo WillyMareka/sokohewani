@@ -23,6 +23,7 @@
 |
 */
 $config['base_url'] = 'http://'.$_SERVER['SERVER_NAME'].'/sokohewani/';
+// $config['base_url'] = 'http://www.bingwalimited.co.ke/sokoadmin/';
 
 /*
 |--------------------------------------------------------------------------

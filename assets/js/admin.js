@@ -13,15 +13,26 @@ $('.scrollspy').scrollSpy();
 //dataTables
 
 
-$('#homeuserprofiles').dataTable( {
-    dom : 'Bfrtip',
-    select : true
+$('#homeuserprofiles').DataTable( {
+   
   } );
 
 
 $('#homeinuserprofiles').DataTable({
     language: {
         searchPlaceholder: "Search inactive profile"
+    }
+}); 
+
+$('#rmessageprofiles').DataTable({
+    language: {
+        searchPlaceholder: "Search for read message"
+    }
+});  
+
+$('#umessageprofiles').DataTable({
+    language: {
+        searchPlaceholder: "Search for unread message"
     }
 });  
 

@@ -13,6 +13,182 @@ class Admin_model extends MY_Model {
     /* get all active  categories from  the  database
     _______________________________________________________*/
 
+   
+
+   public function log_admin()
+    {
+        $username = ($this->input->post('loguser'));
+        $passw1 = md5(($this->input->post('logpass'))); 
+
+         //echo '<pre>';print_r($passw1);echo'</pre>';die;
+        $sql = "SELECT * FROM admin WHERE ademail = '". $username ."' AND adpassword = '". $passw1 ."' LIMIT 1";
+
+
+
+
+        $result = $this->db->query($sql);
+        
+        $row = $result->row();
+         // echo '<pre>';print_r($result);echo'</pre>';die;
+        $sql2 = "SELECT * FROM admin WHERE ademail = '". $username ."' AND adstatus = 0 ";
+
+        $result2 = $this->db->query($sql2);
+        $row2 = $result->row();
+
+        if($result->num_rows() == 1){
+           if($row2->adstatus){
+             if ($row->adpassword === $passw1) {
+               $session_data = array(
+                   'adid'       => $row ->adid , 
+                   'adfname'    => $row ->adfname , 
+                   'adlname'    => $row ->adlname , 
+                   'ademail'    => $row ->ademail ,
+                   'adstatus'   => $row ->adstatus ,
+                   
+                );
+
+                $this -> set_session($session_data);
+                return 'logged_in';
+             } else {
+               return "session_fail";
+             }
+           }else{
+             return "not_activated";
+           }
+         }else{
+          return "incorrect_password";
+         }
+
+
+       
+       //print_r($this->session->all_userdata());
+    }
+
+
+    public function logoutadmin($sess_log){
+         $data['logged_in'] = 0;
+
+         $this->db->where('session_id', $sess_log);
+         $update = $this->db->update('adminsessions', $data);
+     }
+
+
+    private function set_session($session_data){
+      $sql = "SELECT adid , adfname, adlname, ademail, adstatus FROM admin WHERE ademail = '". $session_data['ademail'] ."' LIMIT 1";
+      $result = $this->db->query($sql);
+      $row = $result->row();
+       //echo "<pre>";print_r($result);die();
+       //echo $session_data['adid'];die();
+      $setting_session = array(
+                   'adid'       => $session_data['adid'] , 
+                   'adfname'    => $session_data['adfname'] ,
+                   'adlname'    => $session_data['adlname'] ,
+                   'ademail'    => $session_data['ademail'] ,
+                   'adstatus'   => $session_data['adstatus'] ,
+                   'logged_in'  => 1
+      ); 
+
+      $this->session->set_userdata($setting_session);
+
+      //echo "<pre>";print_r($setting_session);die();
+      
+      $details = $this->session->all_userdata();
+       $sql = "INSERT INTO adminsessions (`session_id`,`ip_address`,`user_agent`,`last_activity`,`user_data`,`adid`,`adfname`,`adlname`,`ademail`,`adstatus`,`logged_in`) 
+               VALUES ('".$details['session_id']."', '".$details['ip_address']."','".$details['user_agent']."', 
+               '".$details['last_activity']."','1', '".$details['adid']."', '".$details['adfname']."', 
+               '".$details['adlname']."', '".$details['ademail']."', '".$details['adstatus']."', 
+               '".$details['logged_in']."') ";
+
+    $results = $this->db->query($sql);
+      //$this->db->insert_batch('ci_sessions',$session_details);
+       // $details = $this->session->all_userdata();
+        
+    }
+
+    public function ownprofile($adid)
+    {
+         $profile = array();
+         
+         $query = $this->db->get_where('admin', array('adid' => $adid));
+         $result = $query->result_array();
+
+            if ($result) {
+               foreach ($result as $key => $value) {
+                  $profile[$value['adid']] = $value;
+               }
+             // echo '<pre>';print_r($profile);echo '</pre>';die();
+              return $profile;
+
+            }
+    
+    return $profile;
+    }
+
+    public function enter_admin(){
+      $firstname = $this->input->post('first_name');
+      $lastname = $this->input->post('last_name');
+      $email = $this->input->post('adminemail');
+      $passw = md5($this->input->post('adminpassword'));
+      
+      $admin_details_data = array();
+      $admin_details = array(
+          'adfname' => $firstname,
+          'adlname' => $lastname,
+          'ademail' => $email,
+          'adpassword' => $passw
+      );
+
+        
+
+        array_push($admin_details_data, $admin_details);
+
+        //echo '<pre>'; print_r($member_details_data); echo '<pre>'; die;
+
+        $this->db->insert_batch('admin',$admin_details_data);
+       
+
+      if($this->db->affected_rows() === 1){
+
+        return $email;
+
+      }else{
+
+      $subject = 'Admin Entry';
+      $message = 'Problem in registering User Name '.$email.' . Please rectify immediatelly';
+
+      $message_details_data = array();
+      $message_details = array(
+          'subject' => $subject,
+          'message' => $message
+      );
+
+        
+
+        array_push($message_details_data, $message_details);
+
+        //echo '<pre>'; print_r($member_details_data); echo '<pre>'; die;
+
+        // $this->db->insert_batch('mail',$message_details_data);
+
+        // //echo 'Applicant is not able to be registered';
+        // $this->load->library('email');
+        // $this->email->from('info@marewill.com','MareWill Fashion');
+        // $this->email->to('marekawilly@marewill.com','marekawilly@gmail.com');
+        // $this->email->subject('Failed registeration of a user');
+
+        // if(isset($email)){
+        //     $this->email->message('Unable to register and insert user with the email of '.$email.' to the database.');
+        // }else{
+        //     $this->email->message('Unable to register and insert user to the database.');
+
+        // }
+
+        // $this->email->send();
+        return FALSE;
+     }
+    }
+
+
 
    function get_all_users($status) {
     switch ($status) {
@@ -26,6 +202,31 @@ class Admin_model extends MY_Model {
 
         case 'inactive':
             $sql = "SELECT * FROM `users` WHERE userstatus = 0 ";
+            break;
+        
+        default:
+            # code...
+            break;
+    }
+        
+        $result = $this->db->query($sql);
+        //echo "<pre>";print_r($result);echo "</pre>";die();
+        return $result->result_array();
+    }
+
+
+    function get_all_messages($status) {
+    switch ($status) {
+        case 'all':
+            $sql = "SELECT * FROM `messages`";
+            break;
+
+        case 'read':
+           $sql = "SELECT * FROM `messages` WHERE messstatus = 1 ";
+            break;
+
+        case 'unread':
+            $sql = "SELECT * FROM `messages` WHERE messstatus = 0 ";
             break;
         
         default:
@@ -65,15 +266,15 @@ class Admin_model extends MY_Model {
     function get_all_subcategories($status) {
         switch ($status) {
             case 'all':
-               $sql = "SELECT * FROM `subcategories`";
+               $sql = "SELECT * FROM subcategories s, categories c WHERE s.catid = c.catid";
                 break;
 
             case 'active':
-               $sql = "SELECT * FROM `subcategories` WHERE subcatstatus = 1 ";
+               $sql = "SELECT * FROM subcategories s, categories c WHERE s.catid = c.catid AND subcatstatus = 1";
                 break;
 
             case 'inactive':
-               $sql = "SELECT * FROM `subcategories` WHERE subcatstatus = 0 ";
+               $sql = "SELECT * FROM subcategories s, categories c WHERE s.catid = c.catid AND subcatstatus = 0";
                 break;
             
             default:
@@ -95,6 +296,15 @@ class Admin_model extends MY_Model {
         }
     }
 
+
+    function delete_message($id) {
+         $result = $this->db->query("DELETE FROM `messages` WHERE messid = '".$id."'"); 
+         if ($result) {
+            return "deleted";
+        } else {
+            return "notdeleted";
+        }
+    }
    
 
     public function userprofile($id) {
@@ -107,6 +317,23 @@ class Admin_model extends MY_Model {
         if ($result) {
             foreach ($result as $key => $value) {
                 $profile[$value['userid']] = $value;
+            }
+            return $profile;
+        }
+
+        return $profile;
+    }
+
+    public function messageprofile($id) {
+        $profile = array();
+
+        $query = $this->db->get_where('messages', array('messid' => $id));
+
+        $result = $query->result_array();
+
+        if ($result) {
+            foreach ($result as $key => $value) {
+                $profile[$value['messid']] = $value;
             }
             return $profile;
         }
@@ -152,8 +379,8 @@ class Admin_model extends MY_Model {
 
 
     public function enter_category(){
-      $categoryname = strtoupper($this->input->post('category-name'));
-      $categorydescription = strtoupper($this->input->post('category-description'));
+      $categoryname = $this->input->post('category-name');
+      $categorydescription = $this->input->post('category-description');
       
       
 
@@ -347,6 +574,33 @@ class Admin_model extends MY_Model {
     }
 
 
+    public function updatemessage($type, $mess_id) {
+        $data = array();
+
+        switch ($type) {
+            case 'messageunread':
+                $data['messstatus'] = 0;
+
+                break;
+
+            case 'messageread':
+                $data['messstatus'] = 1;
+
+                break;
+        }
+
+
+        $this->db->where('messid', $mess_id);
+        $update = $this->db->update('messages', $data);
+
+        if ($update) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     public function updatecategory($type, $cat_id) {
         $data = array();
@@ -410,33 +664,59 @@ class Admin_model extends MY_Model {
  
           switch ($prodapprovestate) {
               case 'await':
-              $query = $this->db->get_where('products', array('prodapproval' => 2, 'prodavail' => 0)); 
+
+              $sql = "SELECT 
+                      p.prodid, p.prodtitle, p.proddesc, p.proddate, p.userid, p.prodprice, p.prodapproval, p.prodavail,
+                      p.prodlocation, c.catname, s.subname
+                      FROM products p, subcategories s, categories c 
+                      WHERE p.subid = s.subid AND c.catid = s.catid 
+                            AND p.prodavail = 0 AND p.prodapproval = 2  
+                      ORDER BY p.prodtitle;";
+              //$query = $this->db->get_where('products', array('prodapproval' => 2, 'prodavail' => 0)); 
               break;
               case 'approved':
-               $query = $this->db->get_where('products', array('prodapproval' => 1, 'prodavail' => 1));
+
+              $sql = "SELECT 
+                      p.prodid, p.prodtitle, p.proddesc, p.proddate, p.userid, p.prodprice, p.prodapproval, p.prodavail,
+                      p.prodlocation, c.catname, s.subname
+                      FROM products p, subcategories s, categories c 
+                      WHERE p.subid = s.subid AND c.catid = s.catid 
+                            AND p.prodavail = 1 AND p.prodapproval = 1
+                      ORDER BY p.prodtitle;";
+        
               break;
               case 'disapproved':
-               $query = $this->db->get_where('products', array('prodapproval' => 3, 'prodavail' => 0));
+               $sql = "SELECT 
+                      p.prodid, p.prodtitle, p.proddesc, p.proddate, p.userid, p.prodprice, p.prodapproval, p.prodavail,
+                      p.prodlocation, c.catname, s.subname
+                      FROM products p, subcategories s, categories c 
+                      WHERE p.subid = s.subid AND c.catid = s.catid 
+                            AND p.prodavail = 0 AND p.prodapproval = 0
+                      ORDER BY p.prodtitle;";
               break;
     
               default:
                break;
           }
     
+       $results = $this->db->query($sql);
+        
+       $result = $results->result_array();
 
-
-    $result = $query->result_array();
-
-    if ($result) {
-      foreach ($result as $key => $value) {
-        $products[$value['prodid']] = $value;
-      }
-      //echo '<pre>';print_r($products);echo '</pre>';die();
+    //$result = $query->result_array();
+    //echo '<pre>';print_r($result);echo '</pre>';die();
+    // if ($result) {
+    //   foreach ($result as $key => $value) {
+    //     $products[$value['prodid']] = $value;
+    //   }
+    //   //
       
-      return $products;
-    }
+    //   return $products;
+    // }
     
-    return $products;
+    // return $products;
+
+       return $result;
   }
 
 
@@ -460,8 +740,6 @@ class Admin_model extends MY_Model {
       
       
     }
-
-    
 
     $result = $query->result_array();
 
@@ -491,7 +769,7 @@ class Admin_model extends MY_Model {
         break;
       
       case 'disapprove':
-         $data['prodapproval'] = 3;
+         $data['prodapproval'] = 0;
          $data['prodavail'] = 0; 
 
         break;
@@ -504,6 +782,83 @@ class Admin_model extends MY_Model {
 
     //       $subject = "New Product Approved";
     //       $message = 'Product ID '.$prod_id.' was approved';
+
+    //   $mail_to_admin = array();
+    //   $mail_admin = array(
+    //       'subject' => $subject,
+    //       'message' => $message
+    //     );
+
+    //   array_push($mail_to_admin, $mail_admin);
+
+    //   $this->db->insert_batch('mail',$mail_to_admin);
+
+
+    // }elseif ($type=="disapprove") {
+
+
+    //       $subject = "New Product Disapproved";
+    //       $message = 'Product ID '.$prod_id.' was disapproved';
+
+    //   $mail_to_admin = array();
+    //   $mail_admin = array(
+    //       'subject' => $subject,
+    //       'message' => $message
+    //     );
+
+    //   array_push($mail_to_admin, $mail_admin);
+
+    //   $this->db->insert_batch('mail',$mail_to_admin);
+
+
+    // }else{
+
+    //   $subject = "New Product Needs Approval";
+    //   $message = 'New product called '.$productname.' from '.$productcompany.' needs your approval';
+
+    //   $mail_to_manager = array();
+    //   $mail_manager = array(
+    //       'mm_subject' => $subject,
+    //       'mm_message' => $message
+    //     );
+
+    //   array_push($mail_to_manager, $mail_manager);
+
+    //   $this->db->insert_batch('manager_mail',$mail_to_manager);
+    // }
+
+    if ($update) {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public function updatephoto($type, $photo_id)
+  {
+    $data = array();
+    switch ($type) {
+      case 'approve':
+        $data['photostatus'] = 0; 
+        
+        
+        break;
+      
+      case 'disapprove':
+         $data['photostatus'] = 0;
+
+        break;
+
+    }
+    $this->db->where('photoid', $photo_id);
+    $update = $this->db->update('photos', $data);
+
+    // if($type=="approve"){
+
+    //       $subject = "New Photo Approved";
+    //       $message = 'Photo ID '.$photoid.' was approved';
 
     //   $mail_to_admin = array();
     //   $mail_admin = array(
@@ -651,6 +1006,128 @@ class Admin_model extends MY_Model {
 
       $subject = 'User Update';
       $message = 'Problem in registering User ID '.$id.' . Please rectify immediately';
+
+      $message_details_data = array();
+      $message_details = array(
+          'subject' => $subject,
+          'message' => $message
+      );
+
+        
+
+        array_push($message_details_data, $message_details);
+
+        //echo '<pre>'; print_r($member_details_data); echo '<pre>'; die;
+
+        // $this->db->insert_batch('mail',$message_details_data);
+
+        // //echo 'Applicant is not able to be registered';
+        // $this->load->library('email');
+        // $this->email->from('info@marewill.com','MareWill Fashion');
+        // $this->email->to('marekawilly@marewill.com','marekawilly@gmail.com');
+        // $this->email->subject('Failed registeration of a user');
+
+        // if(isset($email)){
+        //     $this->email->message('Unable to register and insert user with the email of '.$email.' to the database.');
+        // }else{
+        //     $this->email->message('Unable to register and insert user to the database.');
+
+        // }
+
+        // $this->email->send();
+        return FALSE;
+     }
+  }
+
+
+  function profile_edit(){
+      $id = $this->input->post('ad-id');
+      $firstname = $this->input->post('first-name');
+      $lastname = $this->input->post('last-name');
+      $emailaddress = $this->input->post('email-address');
+      
+      
+
+      $admin_details_data = array(
+          'adfname' => $firstname,
+          'adlname' => $lastname,
+          'ademail' => $emailaddress         
+      );
+
+     
+
+        $this->db->where('adid', $id);
+        $this->db->update('admin', $admin_details_data);
+
+       
+
+      if($this->db->affected_rows() === 1){
+      //echo '<pre>'; print_r($id); echo '<pre>'; die;
+
+        return $id;
+
+      }else{
+
+      $subject = 'Admin Update';
+      $message = 'Problem in registering Admin ID '.$id.' . Please rectify immediately';
+
+      $message_details_data = array();
+      $message_details = array(
+          'subject' => $subject,
+          'message' => $message
+      );
+
+        
+
+        array_push($message_details_data, $message_details);
+
+        //echo '<pre>'; print_r($member_details_data); echo '<pre>'; die;
+
+        // $this->db->insert_batch('mail',$message_details_data);
+
+        // //echo 'Applicant is not able to be registered';
+        // $this->load->library('email');
+        // $this->email->from('info@marewill.com','MareWill Fashion');
+        // $this->email->to('marekawilly@marewill.com','marekawilly@gmail.com');
+        // $this->email->subject('Failed registeration of a user');
+
+        // if(isset($email)){
+        //     $this->email->message('Unable to register and insert user with the email of '.$email.' to the database.');
+        // }else{
+        //     $this->email->message('Unable to register and insert user to the database.');
+
+        // }
+
+        // $this->email->send();
+        return FALSE;
+     }
+  }
+
+
+  function profilepass_edit($id,$newpass){
+      
+      
+
+      $admin_details_data = array(
+          'adpassword' => $newpass       
+      );
+
+     
+
+        $this->db->where('adid', $id);
+        $this->db->update('admin', $admin_details_data);
+
+       
+
+      if($this->db->affected_rows() === 1){
+      //echo '<pre>'; print_r($id); echo '<pre>'; die;
+
+        return $id;
+
+      }else{
+
+      $subject = 'Admin Password Update';
+      $message = 'Problem in changing password with Admin ID '.$id.' . Please rectify immediately';
 
       $message_details_data = array();
       $message_details = array(
@@ -910,6 +1387,76 @@ class Admin_model extends MY_Model {
         //echo "<pre>";print_r($data);echo "</pre>";die();
 
         return $data->subcategories;
+   }
+
+
+   public function messagenumber($type){
+
+      switch ($type) {
+        case 'all':
+          $sql = "SELECT COUNT(`messid`) as messages FROM messages";
+          break;
+
+        case 'read':
+          $sql = "SELECT COUNT(`messid`) as messages FROM messages WHERE messstatus = 1";
+          break;
+
+        case 'unread':
+          $sql = "SELECT COUNT(`messid`) as messages FROM messages WHERE messstatus = 0";
+          break;
+        
+      }
+    
+
+        $result = $this->db->query($sql);
+        $data = $result->row();
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+
+        return $data->messages;
+   }
+
+
+   public function cat_check(){
+    $categoryname = $this->input->post('category-name');
+      $sql = "SELECT * FROM `categories` WHERE `catname` LIKE '".$categoryname."' ";
+      $result = $this->db->query($sql);
+      $data = $result->row();
+
+      if ($data) {
+        return TRUE;
+      } else {
+        return FALSE;
+      }
+      
+   }
+
+
+   public function check_password($id,$oldpass){
+      $sql = "SELECT * FROM admin WHERE adid = '".$id."' AND adpassword = '".$oldpass."' ";
+      $result = $this->db->query($sql);
+      $data = $result->row();
+
+      if ($data) {
+        return TRUE;
+      } else {
+        return FALSE;
+      }
+      
+   }
+      
+
+   public function subcat_check(){
+    $subcategoryname = $this->input->post('sub-category-name');
+      $sql = "SELECT * FROM `subcategories` WHERE `subname` LIKE '".$subcategoryname."' ";
+      $result = $this->db->query($sql);
+      $data = $result->row();
+
+      if ($data) {
+        return TRUE;
+      } else {
+        return FALSE;
+      }
+      
    }
 
 

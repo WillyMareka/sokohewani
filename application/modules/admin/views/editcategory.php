@@ -16,21 +16,21 @@
    </div>
    <div class="row">
     <div class="input-field col s6">
-      <input value="<?php echo $data['catname']; ?>" id="category-name" name="category-name" type="text" class="validate">
+      <input value="<?php echo $data['catname']; ?>" id="category-name" required name="category-name" type="text" class="validate">
       <label class="active" for="category-name">Category Name</label>
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      <input value="<?php echo $data['catdescription']; ?>" id="category-description" name="category-description" type="text" class="validate">
+      <input value="<?php echo $data['catdescription']; ?>" id="category-description" required name="category-description" type="text" class="validate">
       <label class="active" for="category-description">Description</label>
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      <input value="<?php echo $data['catstatus']; ?>" id="category-status" name="category-status" type="text" class="validate">
+      <input value="<?php echo $data['catstatus']; ?>" id="category-status" required name="category-status" type="text" class="validate">
       <label class="active" for="category-status">Status</label>
     </div>
   </div>
@@ -50,7 +50,7 @@
         
       </div>
 
-      <a href="<?php echo base_url(). 'admin/categorydetail/'?><?php echo $data['catid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
+      <a href="<?php echo base_url(). 'admin/categorydetail/view/'?><?php echo $data['catid']; ?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to View</a>
                         
 
         </form>

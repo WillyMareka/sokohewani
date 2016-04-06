@@ -12,12 +12,16 @@
 
 
 <h1><span class="bold">ID : </span><?php echo $data['userid']; ?></h1>
-<p><hr/></p>
 <p><span class="bold">First Name : </span><?php echo $data['firstname']; ?></p>
 <p><span class="bold">Last Name : </span><?php echo $data['lastname']; ?></p>
 <p><span class="bold">Email Address : </span><?php echo $data['emailaddress']; ?></p>
 <p><span class="bold">Registration Date : </span><?php echo $data['regdate']; ?></p>
-<p><span class="bold">Status : </span><?php echo $data['userstatus']; ?></p>
+<p><span class="bold">Status : </span><?php if($data['userstatus'] == 0){
+                    echo "Deactivated";
+                  }elseif ($data['userstatus'] == 1) {
+                    echo "Activated";
+                  }
+  // echo $data['subcatstatus']; ?></p>
 
 <a href="<?php echo base_url(). 'admin/activeusers'?>" class="btn waves-effect waves-light btn-small"><i class="material-icons left">skip_previous</i>Back to Users</a>
 

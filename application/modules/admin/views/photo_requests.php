@@ -24,7 +24,7 @@
 
 
 <div class="col s12 m4">
-<img class="materialboxed" width="350" src="<?php echo base_url(). 'assets/images/mareka.jpg'?>">
+               <img class="materialboxed" height="350" width="350" src="<?php echo base_url(). 'assets/images/mareka.jpg'?>">
                <!-- <img class="activator" src="<?php echo $data['photopath']; ?>"> -->
           <div class="card small hoverable">
              <!-- <div class="card-image waves-effect waves-block waves-light"> -->
@@ -34,7 +34,8 @@
                <span class="card-title activator grey-text text-darken-4">Photo-ID: <?php echo $data['photoid']; ?> Product For Product-ID: <?php echo $data['prodid']; ?><i class="material-icons right">more_vert</i></span>
              </div>
              <div class="card-action">
-              <a class="" href="<?php echo base_url().'admin/updateproduct/approve/'.$data['prodid'] ?>">Approve</a>
+              <a class="" href="<?php echo base_url().'admin/updatephoto/approve/'.$data['photoid'] ?>">Approve</a>
+              <a class="" href="<?php echo base_url().'admin/updatephoto/disapprove/'.$data['photoid'] ?>">Dispprove</a>
              </div>
              <div class="card-reveal">
                <span class="card-title grey-text text-darken-4">Product ID : <?php echo $data['prodid']; ?><i class="material-icons right">close</i></span>
@@ -61,11 +62,11 @@
               <div class="col s12 m6">
                 <div class="card blue-grey darken-1">
                   <div class="card-content white-text">
-                    <span class="card-title">No pending photos</span>
+                    <span class="card-title">No new photos uploaded</span>
                     <p>No user has requested for a new photo update</p>
                   </div>
                   <div class="card-action">
-                  <a href="<?php echo base_url(). 'admin'?>">Admin Home Page</a>
+                  <a href="<?php echo base_url(). 'admin/adminview'?>">Admin Home Page</a>
                     <a href="<?php echo base_url(). 'admin/inactivephotos'?>">Rejected Photos</a>
                   </div>
                 </div>

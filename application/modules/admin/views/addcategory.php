@@ -4,7 +4,7 @@
     <form role="form" enctype="multipart/form-data" method="POST" action="<?php echo base_url() . 'admin/create_category/create'?>" class="form-horizontal" class="col s12">
       <div class="row">
         <div class="input-field col s6">
-          <input id="category-name" name="category-name" type="text" class="validate">
+          <input id="category-name" required name="category-name" type="text" class="validate">
           <label for="category-name">Category Name</label>
         </div>
       </div>
@@ -23,4 +23,17 @@
       </div>
 
     </form>
-  </div>
+
+    <?php
+                        if (isset($logmessage)){
+                        ?>
+                           <div class="card-panel black-text white">
+                              <?php echo $logmessage; ?>
+                           </div>
+                        <?php } elseif (!(isset($logmessage))) { ?>
+                           
+                        <?php } elseif (null !== validation_errors()) { ?>
+                            <div class="card-panel black-text white">
+                              <?php echo validation_errors(); ?>
+                            </div>
+                        <?php } ?>

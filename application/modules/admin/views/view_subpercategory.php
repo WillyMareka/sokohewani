@@ -19,7 +19,12 @@
     <p><hr/></p>
     <p><span class="bold">Category Name : </span><?php echo $data['catid']; ?></p>
     <p><span class="bold">Date Registered : </span><?php echo $data['subdate']; ?></p>
-    <p><span class="bold">Status : </span><?php echo $data['subcatstatus']; ?></p>
+    <p><span class="bold">Status : </span><?php if($data['subcatstatus'] == 0){
+                    echo "Deactivated";
+                  }elseif ($data['subcatstatus'] == 1) {
+                    echo "Activated";
+                  }
+  // echo $data['subcatstatus']; ?></p>
     <p><span class="bold">Description : </span><?php echo $data['subdescription']; ?></p>
 </div>
 

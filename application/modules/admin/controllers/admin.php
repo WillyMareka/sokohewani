@@ -14,12 +14,16 @@ class Admin extends MY_Controller {
         $this->load->model('admin_model');
         $this->load->module('export/export');
         $this->load->library('upload');
+        $this->load->library('email');
 
         $this->pic_path = realpath(APPPATH . '../uploads/');
 
-        
-        
-     
+        if ($this->session->userdata('logged_in')) {
+            $this->logged_in = TRUE;
+         } else {
+            //$this->logged_in = FASLE;
+         }
+
     }
 
     /* index function
@@ -32,21 +36,113 @@ class Admin extends MY_Controller {
 
     }
 
+    public function username_error($name){
+        $email = $this->admin_model->username_check();
+
+        if (in_array($name, $email)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+        
+    }
+
+     function validate_admin()
+    {
+       $this->load->library('email');
+
+       $email_data = "Welcome";
+         
+       $this->export->phpmailer($email_data);
+
+        $this->load->library('form_validation');
+        
+         $this->form_validation->set_rules('loguser', 'Username', 'trim|min_length[3]|valid_email|required|xss_clean');
+        $this->form_validation->set_rules('logpass', 'Password', 'trim|min_length[3]|required|max_length[15]|required|xss_clean');
+       
+        
+        if($this->form_validation->run() == FALSE){
+            // echo '<pre>';print_r("Validation Error");echo'</pre>';die;
+
+
+           
+            $this->load->view('template/template_admin_login');
+
+        }else{
+            
+            $result = $this->admin_model->log_admin();      
+            
+             //echo '<pre>';print_r($result);echo'</pre>';die;
+            switch($result){
+
+                case 'logged_in':
+
+                $data['logmessage'] = 'Welcome';
+                // echo '<pre>';print_r("Logged In");echo'</pre>';die;
+                    redirect(base_url().'admin/adminview');
+                break;
+
+                case 'incorrect_password':
+                    // echo '<pre>';print_r("Incorrect Username or Password");echo'</pre>';die;
+                    $data['logmessage'] = 'Incorrect Username or Password. Please try again...';
+
+                    $this->template->call_adminlogin_template($data);
+                    
+                break;
+
+                case 'not_activated':
+                $data['logmessage'] = 'Your account is not activated. Please contact administrator...';
+
+                    $this->template->call_adminlogin_template($data);
+                break;
+            } 
+
+        }
+    } 
+
+
+    function log_check(){
+      if($this->session->userdata('logged_in') == 0){
+
+          redirect(base_url().'admin');
+          //redirect(base_url().'index.php/admin');
+      }else{
+        return "logged_in";
+      }
+   }
+
+
+    function logout()
+    {
+        $sess_log = $this->session->userdata('session_id');
+        $log = $this->admin_model->logoutadmin($sess_log);
+
+        $this->session->sess_destroy();
+        redirect(base_url().'admin');
+    }
+
+
+
     function adminview($data=NULL)
     {
+        $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         
 
@@ -62,9 +158,81 @@ class Admin extends MY_Controller {
         $this->template->call_admin_template($data);
     }
 
+    function unreadmessages($data=NULL)
+    {
+        $this->log_check();
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        
+
+        $data['all_umessages'] = $this->createmessagesview('table','unread');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_messages';
+        $data['footer']='admin/admin_footer';
+
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+    }
+
+
+    function readmessages($data=NULL)
+    {
+        $this->log_check();
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        
+
+        $data['all_rmessages'] = $this->createmessagesview('table','read');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/admin_dmessages';
+        $data['footer']='admin/admin_footer';
+
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+    }
+
 
     function development($data=NULL)
     {
+        $this->log_check();
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -75,21 +243,62 @@ class Admin extends MY_Controller {
 
     }
 
+    function sign()
+    {
+
+        $this->load->view('signup');
+
+    }
+
+    function signup()
+    {
+        $this->load->library('form_validation');
+        
+        $this->form_validation->set_rules('first_name', 'First Name', 'trim|min_length[2]|required|xss_clean');
+        $this->form_validation->set_rules('last_name', 'Last Name', 'trim|min_length[2]|required|xss_clean');
+        $this->form_validation->set_rules('adminemail', 'Email Address', 'trim|required|valid_email|xss_clean|is_unique[admin.ademail]');
+        $this->form_validation->set_rules('adminpassword', 'Password', 'trim|min_length[3]|max_length[15]|required|xss_clean');
+        $this->form_validation->set_rules('adminpassword2', 'Re-Entered Password', 'trim|required|matches[adminpassword]|xss_clean');
+
+        if($this->form_validation->run() == FALSE){
+            
+            $this->load->view('signup');
+            //echo 'Not working';
+        }else{
+
+                $result = $this->admin_model->enter_admin();
+               //print_r($result);
+
+              if($result){
+                 $this->index();
+
+              }else{
+                 echo 'There was a problem with the website.<br/>Please contact the administrator';
+              }
+            
+         }
+    }
+
     function activeusers($data=NULL)
     {
+        $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
 
         $data['all_users'] = $this->createusersview('table','all');
@@ -108,19 +317,25 @@ class Admin extends MY_Controller {
 
     function activecategories($data=NULL)
     {
+        $this->log_check();
+
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['all_categories'] = $this->createcategoryview('table','all');
   
@@ -138,19 +353,24 @@ class Admin extends MY_Controller {
 
     function newcategory($data=NULL)
     {
+        $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
@@ -166,19 +386,24 @@ class Admin extends MY_Controller {
 
     function newsubcategory($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['category_combo'] = $this->all_category_combo();
 
@@ -197,19 +422,24 @@ class Admin extends MY_Controller {
     
     function inactiveusers($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['all_dusers'] = $this->createusersview('table','inactive');
   
@@ -226,19 +456,24 @@ class Admin extends MY_Controller {
 
     function inactivecategories($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['all_dcategories'] = $this->createcategoryview('table','inactive');
   
@@ -255,19 +490,24 @@ class Admin extends MY_Controller {
 
     function inactivesubcategories($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['all_dsubcategories'] = $this->createsubcategoryview('table','inactive');
   
@@ -286,19 +526,24 @@ class Admin extends MY_Controller {
 
     function productsview($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['waits'] = $this->productapproving('await');
         $data['approves'] = $this->productapproving('approved');
@@ -315,22 +560,29 @@ class Admin extends MY_Controller {
     }
 
 
-    function photosview($data=NULL)
+    function photorequests($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
+        $data['approves'] = $this->photoapproving('approves');
+        $data['disapproves'] = $this->photoapproving('disapproves');
         $data['photos'] = $this->photoapproving('wait');
   
         $data['navbar']='admin/admin_header';
@@ -343,27 +595,33 @@ class Admin extends MY_Controller {
 
     }
 
-    function inactivephotos($data=NULL)
+    function photosview($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
-        $data['photos'] = $this->photoapproving('disapproves');
+        $data['dphotos'] = $this->photoapproving('disapproves');
+        $data['aphotos'] = $this->photoapproving('approves');
   
         $data['navbar']='admin/admin_header';
         $data['sidebar']='admin/admin_sidebar';
-        $data['content']='admin/admin_dphotos';
+        $data['content']='admin/admin_photos';
         $data['footer']='admin/admin_footer';
 
         //echo "<pre>";print_r($data);die();
@@ -374,19 +632,24 @@ class Admin extends MY_Controller {
 
     function activesubcategories($data=NULL)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
         $data['all_subcategories'] = $this->createsubcategoryview('table','all');
   
@@ -406,6 +669,8 @@ class Admin extends MY_Controller {
 
     function createusersview($type,$status)
     {
+         $this->log_check();
+
      
       $users = $this->admin_model->get_all_users($status);
 
@@ -460,15 +725,29 @@ class Admin extends MY_Controller {
                 
                 $display .= '<td class="centered">'.$date.'</td>';
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/userdetail/view/'.$data['userid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="View Profile" href = "'.base_url().'admin/userdetail/view/'.$data['userid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['userstatus'] == 0){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/userupdate/userrestore/'.$data['userid'].'"><i class="material-icons">lock_outline</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Activate" href = "'.base_url().'admin/userupdate/userrestore/'.$data['userid'].'"><i class="material-icons">lock_outline</i></td>';
                }else if($data['userstatus'] == 1){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Deactivate" href = "'.base_url().'admin/userupdate/userinactive/'.$data['userid'].'"><i class="material-icons">lock_open</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Deactivate" href = "'.base_url().'admin/userupdate/userinactive/'.$data['userid'].'"><i class="material-icons">lock_open</i></td>';
                 }
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Delete" href = "'.base_url().'admin/userdelete/'.$data['userid'].'"><i class="material-icons">delete</i></a></td>';
+                // $display .= '<td class="centered"><a  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Delete" href = "'.base_url().'admin/userdelete/'.$data['userid'].'"><i class="material-icons">delete</i></a></td>';
+                $display .='<div id="deleteuser_'.$count.'" class="modal modal-fixed-footer">
+                           <div class="modal-content">
+                              <h4>Delete User</h4>
+                              <p>Are you sure you want to delete ??</p>
+                            </div>
+                            <div class="modal-footer">
+                              <a href = "'.base_url().'admin/userdelete/'.$data['userid'].'" class="modal-action modal-close waves-effect waves-green btn-flat ">Yes</a>
+                              <a href = "" class="modal-action modal-close waves-effect waves-green btn-flat ">No</a>
+                            </div>
+                          </div>';
+
+                $display .= '<td class="centered"><a data-position="top" data-delay="50" data-tooltip="Click to Delete" class="modal-trigger waves-effect waves-light btn modal-close" href="#deleteuser_'.$count.'">Modal</a></td>';
+
+                
                 
               
                 $display .= '</tr>';
@@ -477,8 +756,7 @@ class Admin extends MY_Controller {
             
             case 'excel':
                
-                 array_push($row_data, array($count, $data['userid'], $data['firstname'], $data['lastname'], $data['emaillock_outlineress'], $states, $date)); 
-                 
+                 array_push($row_data, array($count, $data['userid'], $data['firstname'], $data['lastname'], $data['email_address'], $states, $date)); 
 
                 break;
 
@@ -492,7 +770,7 @@ class Admin extends MY_Controller {
                 $html_body .= '<td>'.$data['userid'].'</td>';
                 $html_body .= '<td>'.$data['firstname'].'</td>';
                 $html_body .= '<td>'.$data['lastname'].'</td>';
-                $html_body .= '<td>'.$data['emaillock_outlineress'].'</td>';
+                $html_body .= '<td>'.$data['email_address'].'</td>';
                 $html_body .= '<td>'.$state.'</td>';
                 $html_body .= '<td>'.$date.'</td>';
                 $html_body .= "</tr></ol>";
@@ -506,7 +784,7 @@ class Admin extends MY_Controller {
         if($type == 'excel'){
             $excel_data = array();
             $excel_data = array('doc_creator' => 'SokoHewa Limited', 'doc_title' => 'User Excel Report', 'file_name' => 'Profile Report', 'excel_topic' => 'Profiles Report');
-            $column_data = array('No.','User ID','First Name','Last Name','Email lock_outlineress','Profile Status','Date Registered');
+            $column_data = array('No.','User ID','First Name','Last Name','Email address','Profile Status','Date Registered');
             $excel_data['column_data'] = $column_data;
             $excel_data['row_data'] = $row_data;
 
@@ -519,6 +797,149 @@ class Admin extends MY_Controller {
             
             $html_body .= '</tbody></table>';
             $pdf_data = array("pdf_title" => "Profile PDF Report", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => 'Profile Report', 'pdf_topic' => 'Profiles');
+
+        //echo'<pre>';print_r($pdf_data);echo'</pre>';
+
+
+            $this->export->create_pdf($pdf_data);
+        }else{
+            
+              $display .= "</tbody>";
+
+
+
+              //echo'<pre>';print_r($display);echo'</pre>';die();
+
+            return $display;
+        }
+
+        
+    }
+
+
+
+    function createmessagesview($type,$status)
+    {
+         $this->log_check();
+
+     
+      $users = $this->admin_model->get_all_messages($status);
+
+         //echo "<pre>";print_r($users);echo '</pre>';die();
+
+        $column_data = $row_data = array();
+          
+        $count = 0;
+        $display = "<tbody>";
+        $html_body = '
+        <table class="data-table">
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>Date/Time Submitted</th>
+            <th>Subject</th>
+            <th>Message</th>
+        </tr> 
+        </thead>
+        <tbody>
+        <ol type="a">';
+        
+        if(isset($users)){
+
+            foreach ($users as $key => $data) {
+            //echo "<pre>";print_r($users);echo "</pre>";die();
+            $count++;
+                if ($data['messstatus'] == 1) {
+                    $state = '<span class="btn green">Read</span>';
+                    $states = 'Activated';
+                } else if ($data['messstatus'] == 0) {
+                    $state = '<span class="btn red">Unread</span>';
+                    $states = 'Deactivated';
+                }
+
+                $date = $data['messrecieved'];
+
+            
+
+    switch ($type) {
+            case 'table':
+                $display .= '<tr>';
+                $display .= '<td class="centered">'.$count.'</td>';
+                $display .= '<td class="centered">'.$date.'</td>';
+                $display .= '<td class="centered">'.$data['messsubject'].'</td>';
+                $display .= '<td class="centered">'.$state.'</td>';
+                
+                
+                
+                $display .= '<td class="centered"><a  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to View" href = "'.base_url().'admin/messagedetail/view/'.$data['messid'].'"><i class="material-icons">contacts</i></a></td>';
+              
+                        if($data['messstatus'] == 0){
+                $display .= '<td  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Mark as Read" href = "'.base_url().'admin/messageupdate/messageread/'.$data['messid'].'"><i class="material-icons">lock_outline</i></td>';
+               }else if($data['messstatus'] == 1){
+                $display .= '<td class="centered"><a  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Mark as Unread" " href = "'.base_url().'admin/messageupdate/messageunread/'.$data['messid'].'"><i class="material-icons">lock_open</i></td>';
+                }
+                
+                // $display .= '<td class="centered"><a  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Delete" " href = "'.base_url().'admin/messagedelete/'.$data['messid'].'"><i class="material-icons">delete</i></a></td>';
+
+                $display .='<div id="deletemessage_'.$count.'" class="modal modal-fixed-footer">
+                           <div class="modal-content">
+                              <h4>Delete User</h4>
+                              <p>Are you sure you want to delete ??</p>
+                            </div>
+                            <div class="modal-footer">
+                              <a href = "'.base_url().'admin/messagedelete/'.$data['messid'].'" class="modal-action modal-close waves-effect waves-green btn-flat ">Yes</a>
+                              <a href = "" class="modal-action modal-close waves-effect waves-green btn-flat ">No</a>
+                            </div>
+                          </div>';
+
+                $display .= '<td class="centered"><a data-position="top" data-delay="50" data-tooltip="Click to Delete" class="modal-trigger waves-effect waves-light btn modal-close" href="#deletemessage_'.$count.'">Modal</a></td>';
+                
+              
+                $display .= '</tr>';
+
+                break;
+            
+            case 'excel':
+               
+                 array_push($row_data, array($count, $date, $data['messsubject'], $data['messmessage'] )); 
+                 
+
+                break;
+
+            case 'pdf':
+            
+            
+            //echo'<pre>';print_r($html_body);echo'</pre>';die();
+
+                $html_body .= '<tr>';
+                $html_body .= '<td>'.$count.'</td>';
+                $html_body .= '<td>'.$date.'</td>';
+                $html_body .= '<td>'.$data['messsubject'].'</td>';
+                $html_body .= '<td>'.$data['messmessage'].'</td>';
+                $html_body .= "</tr></ol>";
+
+                break;
+               }
+            }
+        }
+        
+
+        if($type == 'excel'){
+            $excel_data = array();
+            $excel_data = array('doc_creator' => 'SokoHewa Limited', 'doc_title' => 'Message Excel Report', 'file_name' => 'Message Report', 'excel_topic' => 'Message Report');
+            $column_data = array('No.','Date/Time Recieved','Subject','Message');
+            $excel_data['column_data'] = $column_data;
+            $excel_data['row_data'] = $row_data;
+
+        //echo'<pre>';print_r($excel_data);echo'</pre>';
+            // echo'<pre>';var_dump($excel_data);echo'</pre>';
+            $this->export->create_excel($excel_data);
+
+        }elseif($type == 'pdf'){
+            
+            
+            $html_body .= '</tbody></table>';
+            $pdf_data = array("pdf_title" => "Message PDF Report", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => 'Message Report', 'pdf_topic' => 'Messages');
 
         //echo'<pre>';print_r($pdf_data);echo'</pre>';
 
@@ -541,6 +962,8 @@ class Admin extends MY_Controller {
 
     function createcategoryview($type,$status)
     {
+         $this->log_check();
+
         $categories = $this->admin_model->get_all_categories($status);
 
          //echo "<pre>";print_r($users);echo '</pre>';die();
@@ -592,15 +1015,15 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$state.'</td>';
                 
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/categorydetail/view/'.$data['catid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to View" href = "'.base_url().'admin/categorydetail/view/'.$data['catid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['catstatus'] == 0){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/catupdate/catrestore/'.$data['catid'].'"><i class="material-icons">lock_outline</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Activate" href = "'.base_url().'admin/catupdate/catrestore/'.$data['catid'].'"><i class="material-icons">lock_outline</i></td>';
                }else if($data['catstatus'] == 1){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Deactivate" href = "'.base_url().'admin/catupdate/catinactive/'.$data['catid'].'"><i class="material-icons">lock_open</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Deactivate" href = "'.base_url().'admin/catupdate/catinactive/'.$data['catid'].'"><i class="material-icons">lock_open</i></td>';
                 }
                 
-                // $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Delete" href = "'.base_url().'admin/catdelete/'.$data['catid'].'"><i class="material-icons">delete</i></a></td>';
+                // $display .= '<td class="centered"><a  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Delete" href = "'.base_url().'admin/catdelete/'.$data['catid'].'"><i class="material-icons">delete</i></a></td>';
                 
               
                 $display .= '</tr>';
@@ -668,6 +1091,8 @@ class Admin extends MY_Controller {
 
     function createsubcategoryview($type,$status)
     {
+         $this->log_check();
+
       
        $subcategories = $this->admin_model->get_all_subcategories($status);           
 
@@ -687,7 +1112,7 @@ class Admin extends MY_Controller {
             <th>Sub-Category Name</th>
             <th>Description</th>
             <th>Date Registered</th>
-            <th>Category ID</th>
+            <th>Category</th>
             <th>Profile Status</th>
         </tr> 
         </thead>
@@ -719,16 +1144,16 @@ class Admin extends MY_Controller {
                 $display .= '<td class="centered">'.$data['subname'].'</td>';
                 // $display .= '<td class="centered">'.$data['subdescription'].'</td>';
                 $display .= '<td class="centered">'.$date.'</td>';
-                $display .= '<td class="centered">'.$data['catid'].'</td>';
+                $display .= '<td class="centered">'.$data['catname'].'</td>';
                 $display .= '<td class="centered">'.$state.'</td>';
                 
                 
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="View Profile" href = "'.base_url().'admin/subcategorydetail/view/'.$data['subid'].'"><i class="material-icons">contacts</i></a></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to View" href = "'.base_url().'admin/subcategorydetail/view/'.$data['subid'].'"><i class="material-icons">contacts</i></a></td>';
               
                         if($data['subcatstatus'] == 0){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Activate" href = "'.base_url().'admin/subcatupdate/subcatrestore/'.$data['subid'].'"><i class="material-icons">lock_outline</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Activate" href = "'.base_url().'admin/subcatupdate/subcatrestore/'.$data['subid'].'"><i class="material-icons">lock_outline</i></td>';
                }else if($data['subcatstatus'] == 1){
-                $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Deactivate" href = "'.base_url().'admin/subcatupdate/subcatinactive/'.$data['subid'].'"><i class="material-icons">lock_open</i></td>';
+                $display .= '<td class="centered"><a class="tooltipped" data-position="top" data-delay="50" data-tooltip="Click to Deactivate" href = "'.base_url().'admin/subcatupdate/subcatinactive/'.$data['subid'].'"><i class="material-icons">lock_open</i></td>';
                 }
                 
                 // $display .= '<td class="centered"><a data-toggle="tooltip" data-placement="bottom" title="Click to Delete" href = "'.base_url().'admin/subcatdelete/'.$data['subcatid'].'"><i class="material-icons">delete</i></a></td>';
@@ -740,7 +1165,7 @@ class Admin extends MY_Controller {
             
             case 'excel':
                
-                 array_push($row_data, array($count, $data['subid'], $data['subname'], $data['subdescription'], $date, $data['catid'], $states)); 
+                 array_push($row_data, array($count, $data['subid'], $data['subname'], $data['subdescription'], $date, $data['catname'], $states)); 
                  
 
                 break;
@@ -755,7 +1180,7 @@ class Admin extends MY_Controller {
                 $html_body .= '<td>'.$data['subname'].'</td>';
                 $html_body .= '<td>'.$data['subdescription'].'</td>';
                 $html_body .= '<td>'.$date.'</td>';
-                $html_body .= '<td>'.$data['catid'].'</td>';
+                $html_body .= '<td>'.$data['catname'].'</td>';
                 $html_body .= '<td>'.$state.'</td>';
                 $html_body .= "</tr></ol>";
 
@@ -768,7 +1193,7 @@ class Admin extends MY_Controller {
         if($type == 'excel'){
             $excel_data = array();
         $excel_data = array('doc_creator' => 'SokoHewa Limited', 'doc_title' => 'Sub-Category Excel Report', 'file_name' => 'Sub-Category Report', 'excel_topic' => 'Sub-Categories Report');
-             $column_data = array('No.','Sub-Category ID','Sub-Category Name','Description','Date Registered','Category ID','Sub-Category Status');
+             $column_data = array('No.','Sub-Category ID','Sub-Category Name','Description','Date Registered','Category','Sub-Category Status');
             $excel_data['column_data'] = $column_data;
             $excel_data['row_data'] = $row_data;
 
@@ -797,32 +1222,98 @@ class Admin extends MY_Controller {
         
     }
 
-    
-
      function create_category($type)
   {
+     $this->log_check();
+
     $this->load->library('form_validation');
 
     switch ($type) {
                 case 'create':
-                    $this->form_validation->set_rules('category-name', 'Category Name', 'trim|required|xss_clean|is_unique[categories.catname]');
+                    //$this->form_validation->set_rules('category-name', 'Category Name', 'required|callback_category_check');
+                    $this->form_validation->set_rules('category-name', 'Category Name', 'required');
                     break;
 
                 case 'edit':
-                    $this->form_validation->set_rules('category-status', 'Category Name', 'required');
+                    $this->form_validation->set_rules('category-name', 'Category Name', 'required');
+                    $this->form_validation->set_rules('category-status', 'Category Status', 'required');
                     break;
                 
             }
         
         
-        
+          
         
 
     if($this->form_validation->run() == FALSE){
-       echo 'Validation Error';die();
-      //redirect(base_url() .'admin/newcategory');
+
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/addcategory';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
         
     }else{
+
+        $catcheck = $this->admin_model->cat_check();
+
+        if ($catcheck == 1) {
+
+        $data['logmessage'] = "The category given already exists";
+           
+           $this->log_check();
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/addcategory';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+        } else {     
 
         switch ($type) {
                 case 'create':
@@ -840,37 +1331,107 @@ class Admin extends MY_Controller {
                 redirect(base_url() .'admin/activecategories');
 
           }else{
-            echo 'No Update';die();
-                //redirect(base_url() .'admin/activecategories');
+            // echo 'No Update';die();
+                redirect(base_url() .'admin/activecategories');
         }
         }
+    }
        
   }
 
     function create_subcategory($type)
   {
+     $this->log_check();
+
     $this->load->library('form_validation');
 
     switch ($type) {
         case 'create':
-           $this->form_validation->set_rules('sub-category-name', 'Sub-Category Name', 'trim|required|xss_clean|is_unique[subcategories.subname]');
-            break;
+           $this->form_validation->set_rules('sub-category-name', 'Sub-Category Name', 'trim|required|xss_clean');
+           // $this->form_validation->set_rules('category-id', 'Category ID', 'required|trim|xss_clean');
+           break;
 
         case 'edit':
+            $this->form_validation->set_rules('sub-category-name', 'Sub-Category Name', 'trim|required|xss_clean');
+            $this->form_validation->set_rules('category-id', 'Category ID', 'required');
             $this->form_validation->set_rules('sub-category-status', 'Sub-Category Status', 'required');
             break;
        
     }
-        
-        
-        
-        
 
     if($this->form_validation->run() == FALSE){
-       echo 'Validation Error';die();
-      //redirect(base_url() .'admin/newcategory');
+       $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        $data['category_combo'] = $this->all_category_combo();
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/addsubcategory';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
         
     }else{
+
+        $subcatcheck = $this->admin_model->subcat_check();
+
+        if ($subcatcheck == 1) {
+
+        $data['logmessage'] = "The subcategory given already exists";
+           
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+        $data['category_combo'] = $this->all_category_combo();
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/addsubcategory';
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+        
+        
+        //echo "<pre>";print_r($data);die();
+        $this->template->call_admin_template($data);
+
+        } else { 
+
            switch ($type) {
                 case 'create':
                     $result = $this->admin_model->enter_subcategory();
@@ -891,12 +1452,68 @@ class Admin extends MY_Controller {
                 redirect(base_url() .'admin/activesubcategories');
         }
         }
+    }
        
   }
 
 
+  public function currentprofile($type,$adid)
+    {
+        $this->log_check();
+
+        $results = $this->admin_model->ownprofile($adid);
+
+        foreach ($results as $key => $values) {
+            $admindetails['ownprofile'][] = $values;  
+        }
+
+        $data['adminprofile'] = $admindetails;
+        
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        
+        switch ($type) {
+            case 'view':
+                $data['content']='admin/admin_profile';
+                break;
+
+            case 'edit':
+                $data['content']='admin/profile_edit';
+                break;
+            
+        }
+        
+
+        $data['footer']='admin/admin_footer';
+
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+    }
+
+
    function userdetail($type,$id)
     {
+         $this->log_check();
+
         //$this->log_check();
         $userdet = array();
 
@@ -909,6 +1526,23 @@ class Admin extends MY_Controller {
         
         
         $data['userdetails'] = $details;
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
 
 
         $data['navbar']='admin/admin_header';
@@ -930,22 +1564,81 @@ class Admin extends MY_Controller {
  
     }
 
-
-    function productdetail($id)
+    function messagedetail($type,$id)
     {
+         $this->log_check();
+
+        //$this->log_check();
+        $userdet = array();
+
+        
+        $results = $this->admin_model->messageprofile($id);
+
+        foreach ($results as $key => $values) {
+            $details['messages'][] = $values;  
+        }
+        
+        
+        $data['messagedetails'] = $details;
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+
+
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        switch ($type) {
+          case 'view':
+              $data['content']='admin/view_message';
+              break;
+
+          case 'edit':
+             $data['content']='admin/editmessage';
+              break;
+        }
+        $data['footer']='admin/admin_footer';
+
+        
+        
+        $this->template->call_admin_template($data);
+ 
+    }
+
+
+    function productdetail($id)
+    {
+         $this->log_check();
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
         //$this->log_check();
         $userdet = array();
 
@@ -974,25 +1667,30 @@ class Admin extends MY_Controller {
 
     function categorydetail($type,$id)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
         //$this->log_check();
         $userdet = array();
 
         
         $results = $this->admin_model->categoryprofile($id);
-
+        //echo '<pre>';print_r($results);echo '</pre>';die;
         foreach ($results as $key => $values) {
             $details['categories'][] = $values;  
         }
@@ -1023,25 +1721,30 @@ class Admin extends MY_Controller {
 
     function subcategorydetail($type,$id)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
         //$this->log_check();
         $userdet = array();
 
         
         $results = $this->admin_model->subcategoryprofile($id);
-
+         // echo '<pre>';print_r($results);echo '</pre>';die;
         foreach ($results as $key => $values) {
             $details['subcategories'][] = $values;  
         }
@@ -1073,19 +1776,24 @@ class Admin extends MY_Controller {
 
     function subpercategory($id)
     {
+         $this->log_check();
+
         $data['waitproductnumber']  = $this->getproductnumber('wait');
         $data['approveproductnumber']  = $this->getproductnumber('approve');
         $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
         $data['waitphotonumber']  = $this->getphotonumber('wait');
 
         $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
         $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
         $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
         
         $data['inusernumber']  = $this->getusernumber('inactive');
         $data['inphotonumber']  = $this->getphotonumber('inactive');
         $data['incategorynumber']  = $this->getcategorynumber('inactive');
         $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
         //$this->log_check();
         $userdet = array();
 
@@ -1112,6 +1820,8 @@ class Admin extends MY_Controller {
 
     function userdelete($id)
     {
+         $this->log_check();
+
         //$this->log_check();
 
         $results = $this->admin_model->delete_user($id);
@@ -1137,8 +1847,41 @@ class Admin extends MY_Controller {
  
     }
 
+    function messagedelete($id)
+    {
+         $this->log_check();
+
+        //$this->log_check();
+
+        $results = $this->admin_model->delete_message($id);
+
+        
+        
+            switch ($results) {
+
+                case 'deleted':
+
+                    $this->unreadmessages();
+                    
+                    break;
+
+                case 'notdeleted':
+
+                    $this->unreadmessages();
+                    
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+ 
+    }
+
     function catdelete($id)
     {
+         $this->log_check();
+
         //$this->log_check();
 
         $results = $this->admin_model->delete_cat($id);
@@ -1169,6 +1912,8 @@ class Admin extends MY_Controller {
 
     function userupdate($type, $user_id)
     {
+         $this->log_check();
+
         $update = $this->admin_model->updateuser($type, $user_id);
 
         if($update)
@@ -1192,8 +1937,38 @@ class Admin extends MY_Controller {
         }
     }
 
+
+    function messageupdate($type, $mess_id)
+    {
+         $this->log_check();
+
+        $update = $this->admin_model->updatemessage($type, $mess_id);
+
+        if($update)
+        {
+            switch ($type) {
+
+                case 'messageunread':
+                    $this->unreadmessages();
+                    
+                    break;
+
+                case 'messageread':
+                    $this->readmessages();
+                    
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
+    }
+
     function catupdate($type, $cat_id)
     {
+         $this->log_check();
+
         $update = $this->admin_model->updatecategory($type, $cat_id);
 
         if($update)
@@ -1216,6 +1991,8 @@ class Admin extends MY_Controller {
 
     function subcatupdate($type, $subcat_id)
     {
+         $this->log_check();
+
         $update = $this->admin_model->updatesubcategory($type, $subcat_id);
 
         if($update)
@@ -1239,6 +2016,8 @@ class Admin extends MY_Controller {
 
     function productapproving($prodapprovestate)
   {
+     $this->log_check();
+
     $proddet = array();
     switch ($prodapprovestate) {
 
@@ -1266,6 +2045,7 @@ class Admin extends MY_Controller {
 
   function photoapproving($type)
   {
+
     $proddet = array();
     
     $results = $this->admin_model->photo_approving_status($type);
@@ -1284,6 +2064,7 @@ class Admin extends MY_Controller {
 
   function updateproduct($type, $prod_id)
   {
+
 
     //print_r($prod_id);die();
     $update = $this->admin_model->updateproduct($type, $prod_id);
@@ -1310,9 +2091,39 @@ class Admin extends MY_Controller {
     }
   }
 
+  function updatephoto($type, $photo_id)
+  {
+
+
+    //print_r($prod_id);die();
+    $update = $this->admin_model->updatephoto($type, $photo_id);
+    if($update)
+    {
+      //echo '<pre>';print_r($update);echo '</pre>';die;
+      switch ($type) {
+        case 'approve':
+         
+          $this->photosview();
+          break;
+
+        case 'disapprove':
+         
+          $this->photosview();
+          break;
+        
+        default:
+          # code...
+          break;
+      }
+    }else{
+      echo '<pre>';print_r("Problem found when updating status");echo '</pre>';die;
+    }
+  }
+
   
 
   function edituser(){
+
      
        $this->load->library('form_validation');
         
@@ -1333,7 +2144,7 @@ class Admin extends MY_Controller {
                 redirect(base_url() .'admin/activeusers');
 
           }else{
-            redirect(base_url() .'admin/activeusers');
+                redirect(base_url() .'admin/activeusers');
                  // echo 'There was a problem with the website.<br/>Please contact the administrator';
         }
         }
@@ -1341,18 +2152,179 @@ class Admin extends MY_Controller {
     
   }
 
+
+  function editprofile(){
+
+     
+       $this->load->library('form_validation');
+        
+       $this->form_validation->set_rules('email-address', 'Email Address', 'trim|required|valid_email|xss_clean');
+        
+        
+
+    if($this->form_validation->run() == FALSE){
+       echo 'Validation error';die();
+      //redirect(base_url() .'admin/activeusers');
+        
+    }else{
+ 
+          $result = $this->admin_model->profile_edit();
+               //print_r($result);
+
+        if($result){
+                redirect(base_url() .'admin/activeusers');
+
+          }else{
+                redirect(base_url() .'admin/activeusers');
+                 // echo 'There was a problem with the website.<br/>Please contact the administrator';
+        }
+        }
+         
+    
+  }
+
+
+  function editprofilepass(){
+      $this->log_check();
+
+      $id = $this->input->post('ad-id');
+      $oldpass = md5($this->input->post('oldpassword'));
+      $newpass = md5($this->input->post('newpassword'));
+      $newpass2 = md5($this->input->post('newpassword2'));
+
+      $get_validation = $this->admin_model->check_password($id,$oldpass);
+
+        if ($get_validation == 0) {
+
+        $data['logmessage'] = "Old Password entered does not match your credentials.";
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
   
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/profile_edit';
+        $data['footer']='admin/admin_footer';
 
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+            
+        } else {
 
+            if ($oldpass == $newpass) {
+                 $data['logmessage'] = "Old Password entered should not match with New Password";
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/profile_edit';
+        $data['footer']='admin/admin_footer';
+
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+                # code...
+            }else{
+            
+
+       $this->load->library('form_validation');
+        
+       $this->form_validation->set_rules('newpassword', 'New Password', 'required|xss_clean');
+       $this->form_validation->set_rules('newpassword2', 'Confirm Password', 'matches[newpassword]|required|xss_clean');
+        
+        
+
+    if($this->form_validation->run() == FALSE){
+
+        $data['logmessage'] = "The passwords entered do not match";
+
+        $data['waitproductnumber']  = $this->getproductnumber('wait');
+        $data['approveproductnumber']  = $this->getproductnumber('approve');
+        $data['diapproveproductnumber']  = $this->getproductnumber('disapprove');
+        $data['waitphotonumber']  = $this->getphotonumber('wait');
+
+        $data['allusernumber']  = $this->getusernumber('all');
+        $data['allphotonumber']  = $this->getphotonumber('all');
+        $data['allcategorynumber']  = $this->getcategorynumber('all');
+        $data['umessagenumber']  = $this->getmessagenumber('unread');
+        $data['allsubcategorynumber']  = $this->getsubcategorynumber('all');
+        
+        $data['inusernumber']  = $this->getusernumber('inactive');
+        $data['inphotonumber']  = $this->getphotonumber('inactive');
+        $data['incategorynumber']  = $this->getcategorynumber('inactive');
+        $data['insubcategorynumber']  = $this->getsubcategorynumber('inactive');
+        $data['rmessagenumber']  = $this->getmessagenumber('read');
+  
+        $data['navbar']='admin/admin_header';
+        $data['sidebar']='admin/admin_sidebar';
+        $data['content']='admin/profile_edit';
+        $data['footer']='admin/admin_footer';
+
+        
+        //echo "<pre>";print_r($data);echo "</pre>";die();
+        $this->template->call_admin_template($data);
+        
+    }else{
+
+      
+
+      $result = $this->admin_model->profilepass_edit($id,$newpass);
+
+        if($result){
+                redirect(base_url() .'admin/adminview');
+
+          }else{
+                redirect(base_url() .'admin/adminview');
+                 // echo 'There was a problem with the website.<br/>Please contact the administrator';
+          }
+        }
+     }
+
+    }
+         
+    
+  }
 
   function all_category_combo()
     {
         $categories = $this->admin_model->get_avail_categories();
-        // echo "<pre>";print_r($categories);die();
+         
         $this->categories_combo .= '<select name="category-id" id="category-id">';
-        $this->categories_combo .= '<option value="" disabled selected>Choose your option</option>';
+        // $this->categories_combo .= '<option value="" selected>Choose your option</option>';
         foreach ($categories as $key => $value) {
             $this->categories_combo .= '<option value="'.$value['catid'].'">'.$value['catname'].'</option>';
+            //echo "<pre>";print_r($value);die();
         }
         $this->categories_combo .= '</select>';
 
@@ -1401,6 +2373,15 @@ class Admin extends MY_Controller {
     public function getsubcategorynumber($type)
     {
           $results = $this->admin_model->subcategorynumber($type);
+
+          return $results;
+
+          //echo '<pre>'; print_r($results); echo '</pre>';die;
+    }
+
+    public function getmessagenumber($type)
+    {
+          $results = $this->admin_model->messagenumber($type);
 
           return $results;
 
