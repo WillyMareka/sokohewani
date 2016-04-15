@@ -15,14 +15,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
     <link rel="stylesheet" href="<?php echo base_url().'assets/plugins/jquery-ui-1.11.4/jquery-ui.min.css'?>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="<?php echo base_url().'assets/plugins/materialize/css/materialize.css'?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url().'assets/css/style.css'?>" />
     <!-- /CSS plugins -->
 
 
     <!-- JS plugins -->
+    
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/js/jquery-1.12.2.min.js'?>"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/plugins/jquery-ui-1.11.4/jquery-ui.min.js'?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/plugins/materialize/js/materialize.js'?>"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/js/admin.js'?>"></script>
     <!-- /JS plugins -->
 
@@ -35,7 +38,7 @@
  	<nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">Admin Login</a>
-      <?php if ($this->session->userdata('logged_in')==1) {?>
+      <?php if ($this->session->userdata('logged_in')==1 || $this->session->userdata('adlname') == null) {?>
 
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="<?php echo base_url().'admin/adminview'?>">Admin Page</a></li>
@@ -70,7 +73,7 @@
                     <div class="row">
                       <div class="input-field col s12 m12">
                         <i class="material-icons prefix">account_circle</i>
-                        <input name="loguser" id="loguser" type="text" class="validate">
+                        <input name="loguser" id="loguser" required type="email" class="validate">
                         <label for="loguser">Username</label>
                       </div>
                     </div>
@@ -78,7 +81,7 @@
                     <div class="row">
                       <div class="input-field col s12 m12 center">
                         <i class="material-icons prefix">vpn_key</i>
-                        <input id="logpass" name="logpass" type="password" class="validate">
+                        <input id="logpass" name="logpass" required type="password" class="validate">
                         <label for="logpass">Password</label>
                       </div>
                     </div>
@@ -91,7 +94,7 @@
                       </div>
                     </div>
 
-                    <a class="btn-flat hover-underline">Forget Password ?</a>
+                    <a href ="<?php echo base_url() . 'admin/forgot_password'?>" class="btn-flat hover-underline">Forget Password ?</a>
 
                     
       

@@ -3,9 +3,6 @@ $( document ).ready(function(){
 //materialize
 $(".button-collapse").sideNav();
 $(".dropdown-button").dropdown();
-$('select').material_select();
-$('.materialboxed').materialbox();
-$('.scrollspy').scrollSpy();
 
 //materialize//
 
@@ -13,26 +10,16 @@ $('.scrollspy').scrollSpy();
 //dataTables
 
 
-$('#homeuserprofiles').DataTable( {
-   
+$('#homeuserprofiles').dataTable( {
+  language: {
+        searchPlaceholder: "Search for profile"
+    }
   } );
 
 
 $('#homeinuserprofiles').DataTable({
     language: {
         searchPlaceholder: "Search inactive profile"
-    }
-}); 
-
-$('#rmessageprofiles').DataTable({
-    language: {
-        searchPlaceholder: "Search for read message"
-    }
-});  
-
-$('#umessageprofiles').DataTable({
-    language: {
-        searchPlaceholder: "Search for unread message"
     }
 });  
 

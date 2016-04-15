@@ -1,0 +1,364 @@
+#body{
+  min-height: 500px;
+}
+
+/*************************************************************/
+/* css for the header and the navigation bar*/
+header{
+  width: 100%;
+  height:31px;
+  background-color: black;
+}
+h4 ,h5, h6{
+  color: #337ab7;
+}
+
+.navigation ul{
+  height: auto ;
+  padding: 5px ;
+  margin: 0px;
+  float: right;
+}
+
+.navigation li{
+  padding: 8px;
+  display: inline;
+}
+
+.navigation a{
+  text-decoration: none;
+  color: white;
+
+}
+
+.navigation a:hover{
+  color: green;
+  background-color: white;
+  padding: 8px;
+}
+/*************************************************************/
+
+/*Css for the search button and the brand*/
+
+#custom-search-input {
+        margin:0;
+        margin-top: 10px;
+        padding: 0;
+        width: 500px;
+        float: right;
+    }
+ 
+    #custom-search-input .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-input button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        color:#D9230F;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
+        }
+
+/*************************************************************/
+
+
+
+/*css for the footer*/
+
+.footer{
+  position: relative;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: black;
+  height: 200px;
+  margin-top: 20px;
+
+
+}
+.footer ul{
+  float: left;
+  margin-left: 200px;
+  list-style-type: none;
+}
+
+.footer li a{
+  text-decoration: none;
+  display: block;
+  color: white;
+
+}
+.footer li a:hover{
+color: #337ab7;
+font-size: 1.1em;
+}
+
+
+/*************************************************************/
+
+/*Css for login form*/
+#login-panel{
+  width: 500px;
+  padding: 10px;
+  margin: auto;
+  margin-top: 40px;
+  background-color: #D0D0D0;
+  margin-bottom: 50px;
+}
+
+#login-form{
+  padding: 20px;
+}
+
+/*************************************************************/
+
+/*Css for signup form*/
+#signup-panel{
+  width: 500px;
+  padding: 10px;
+  margin: auto;
+  margin-top: 20px;
+  background-color: #D0D0D0;
+ 
+  
+}
+
+#signup-form{
+  padding: 20px;
+}
+
+/*************************************************************/
+
+/*Css for contact form*/
+
+#contact-panel{
+  width: 500px;
+  padding: 10px;
+  margin: auto;
+  margin-top: 20px;
+  background-color: #D0D0D0;
+}
+
+#contact-form{
+  padding: 20px;
+}
+
+/*************************************************************/
+
+/*Css for contact form*/
+
+#location-panel{
+  padding: 10px;
+  margin: auto;
+  margin-top: 20px;
+  background-color: #D0D0D0;
+}
+
+#location-content{
+  padding: 20px;
+}
+/*************************************************************/
+
+/*Css for products page*/
+
+/*products container*/
+#products-container{
+  width: 1135px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 5px black;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+/*************************************************************/
+
+/*Css for adding products container */
+
+#addproduct{
+  width: 1135px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 5px black;
+  margin-top: 20px;
+  padding: 20px;
+  height: 500px;
+}
+
+/*Css for adding products container */
+.addpro-box{
+ width:600px;
+  padding:50px;
+  margin: auto;
+  margin-top: 20px;
+
+}
+
+
+
+.dropdown-menu{
+  border-radius:0px; 
+  font-size:12px;
+}
+
+.dropdown-menu li a:hover{
+  font-size:12px;
+  margin: 0px;
+
+
+}
+
+
+.dropdown{
+  margin-right:50px;
+}
+
+
+.dropdown li{
+  color:white;
+}
+
+.dropdown li:hover{
+  color:green;
+ font-weight: bold;
+}
+
+
+.image-upload-div{
+  width: 90px;
+  height: 70px;
+  border: 2px dotted;
+  position: relative;
+ float: right;
+ margin: 20px;
+ background-color:#D0D0D0;
+ border-radius: 5px;
+
+}
+
+.circle-image{
+  position: absolute;
+  border-radius: 500px;
+  border: 2px solid black;
+  height: 30px;
+  width: 30px;
+  top: 50%; left: 50%;
+   margin: -15px;
+   background-color: #337ab7;
+ 
+
+}
+
+.userprofile-image{
+  border-radius: 500px;
+  width: 150px;
+  height:150px;
+  background-color: #3498DB;
+  margin-left: 50px;
+}
+
+.input-box{
+  width:300px;
+  height: 40px;
+  padding: 10px;
+  margin-top:10px;
+  margin-bottom:10px; 
+}
+.user-email{
+  float: left;
+  width:300px;
+  height: 40px;
+  padding: 10px;
+  margin-top:10px;
+  margin-bottom:10px; 
+}
+
+
+.userprof-box{
+  width: 500px;
+  height: 500px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+.addppro-errors{
+  margin-left: 100px;
+}
+
+.addppro-errors_2{
+  margin-left: 150px;
+}
+
+
+
+ #map {
+        height: 100%;
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      #target {
+        width: 345px;
+      }
