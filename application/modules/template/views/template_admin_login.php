@@ -26,7 +26,7 @@
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/plugins/jquery-ui-1.11.4/jquery-ui.min.js'?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/plugins/materialize/js/materialize.js'?>"></script>
-    <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/js/admin.js'?>"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="<?php echo base_url().'assets/js/admin.js'?>"></script> -->
     <!-- /JS plugins -->
 
 
@@ -38,7 +38,9 @@
  	<nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">Admin Login</a>
-      <?php if ($this->session->userdata('logged_in')==1 || $this->session->userdata('adlname') == null) {?>
+      <?php $username = $this->session->userdata('adlname');
+//echo '<pre>';print_r($username);echo'</pre>';die;
+      if (isset($username) && $username !="") {?>
 
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="<?php echo base_url().'admin/adminview'?>">Admin Page</a></li>

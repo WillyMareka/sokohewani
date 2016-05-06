@@ -38,7 +38,8 @@
   <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">Admin Login</a>
-      <?php if ($this->session->userdata('logged_in')==1 || $this->session->userdata('adlname') == null) {?>
+      <?php $username = $this->session->userdata('adlname');
+            if (isset($username) && $username !="") {?>
 
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="<?php echo base_url().'admin/adminview'?>">Admin Page</a></li>
